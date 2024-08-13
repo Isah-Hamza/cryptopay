@@ -817,6 +817,8 @@ div[class*="wide-"] + div[class*="row-column"]:not([class*="mg"]):not([class*="m
 .site-header .quote-btn .btn.btn-outline { background: transparent; }
 .site-header .quote-btn .btn.btn-outline:hover { background: #f7921a; border-color: #f7921a; }
 
+.table td, .table th { font-family: "Quicksand", sans-serif; padding: 20px 8px !important; }
+
 .topbar { padding: 6px 0; color: #3c3c3c; background: #f8f8f8; font-display: "Quicksand", sans-serif; font-size: 13px; line-height: 1; }
 .topbar .top-left { float: left; max-width: 40%; }
 .topbar .top-right { float: right; max-width: 59%; }
