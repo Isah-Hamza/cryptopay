@@ -147,9 +147,12 @@
       			<div class="row text-center">
       				<div class="col-md-3 col-md-offset-0 col-sm-6 col-sm-offset-2 res-m-bttm">
       					<div class="box round shadow-alt">
-      						<img src="images/box-icon-a.png" alt="box-icon" class="box-icon">
-      						<h6 class="ucap">$0.00</h6>
-      						<p class="small">Last Withdrawal Amount.</p>
+      						<!-- <img src="images/box-icon-a.png" alt="box-icon" class="box-icon"> -->
+      						<h6 id="user-name" class="ucap">_</h6>
+      						<p style="margin-bottom: 10px;" class="small">From <b id="user-country">_</b> </p>
+      						<p class="small">Just funded their wallet with</p>
+      						<h6 class="ucap"> $<span style="color: black;" id="user-amount" >0.00</span></h6>
+      						<!-- <p class="small">Last Withdrawal Amount.</p> -->
       					</div>
       				</div>
       				<div class="col-md-3 col-md-offset-0 col-sm-6 col-sm-offset-2 res-m-bttm">
@@ -170,18 +173,20 @@
       					<div class="box round shadow-alt">
 							<img src="images/box-icon-a.png" alt="box-icon" class="box-icon">
       						<h6 style="text-decoration: none !important;" class="ucap">$0.00</h6>
-      						<p style="text-decoration: none !important;" class="small">Click To View Trnx. History</p>
+      						<p style="text-decoration: none !important; font-weight: 600;" class="small">View Transaction History</p>
       					</div>
       				</a>
       			</div>
 				  <div style="margin-top: 50px;" class="container">
 					<div class="row text-center">
-						<a href="#" class="btn btn-md btn-alt">Withdraw </a>
-						<a style="margin-left: 10px;" href="#" class="btn btn-outlinel btn-md btn-alt">Fund Wallet</a>
+						<a href="#withdraw-fund" class="btn btn-md btn-alt">Withdraw </a>
+						<a style="margin-left: 10px;" href="#fund-wallet" class="btn btn-outlinel btn-md btn-alt">Fund Wallet</a>
 					</div>
 				</div>
+
       		</div>
       	</div><!--End Features Box -->
+
     
       	
       	<!--HR Line -->
@@ -190,30 +195,43 @@
     	<!--Section -->
     	<div  class="section section-pad">
     		<div class="container">
-    			<div class="row">
+    			<div id="fund-wallet" class="row">
     				<div class="col-md-8">
     					<div class="text-block">
 							<h3>How To Fund Your Wallet</h3>
 							<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et lorem nec felis finibus laoreet. The company is officially registered in the UK, has a Money Services Busialiquam tellus, sit amet tristique ipsum. </p>
 							<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et lorem nec felis finibus laoreet. The company is officially registered in the UK has a Money Services Business status.</p>
+							<div class="">
+								<div class="form-field col-sm-4 form-m-bttm">
+									<span>Amount</span>
+									<input name="contact-name" type="number" placeholder="Full Name *" class="form-control required">
+								</div>
+								<div class="form-field col-sm-4 form-m-bttm">
+									<span>Transaction Receipt</span>
+									<input name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
+								</div>
+								<div style="margin-top: 33px;" class="form-field col-sm-3 form-m-bttm">
+									<a href="#withdraw-fund" class="btn btn-md btn-alt">Submit </a>
+								</div>
+							</div>
 						</div>
     				</div>
     				<div class="col-md-4">
     					<div class="icon-block">
     						<div class="icon-image">
-    							<img src="images/icon-a.png" alt="icon">
+    							<img src="images/icon-b.png" alt="icon">
     						</div>
     						<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit</p>
     						<ul>
-    							<li>Lorem ipsum dolor sit amet.</li>
-    							<li>Many services nowadays offer.</li>
-    							<li>Busialiquam tellus, sit amet.</li>
+    							<li><b>Bitcoin</b>  - Lorem ipsum dolor sit amet.</li>
+    							<li><b>Solanar</b> - Many services nowadays offer.</li>
+    							<li><b>Ethereum</b> - Busialiquam tellus, sit amet.</li>
     						</ul>
     					</div>
     				</div>
     			</div>
     			<div class="gaps size-2x"></div>
-    			<div class="row">
+    			<div id="withdraw-fund" class="row">
     				<div class="col-md-8">
     					<div class="text-block">
 							<h3>How To Withdraw Your Earnings</h3>
@@ -224,7 +242,7 @@
     				<div class="col-md-4">
     					<div class="icon-block">
     						<div class="icon-image">
-    							<img src="images/icon-b.png" alt="icon">
+    							<img src="images/icon-a.png" alt="icon">
     						</div>
     						<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit</p>
     						<p>Nowadays offer their Many services users to buy Bitcoins, Lorem ipsum dolor sit amet Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit amet</p>
@@ -351,6 +369,35 @@
 		
 		<script src="assets/js/jquery.bundle.js"></script>
 		<script src="assets/js/script.js"></script>
+
+		<script type="module">
+			import { faker } from 'https://esm.sh/@faker-js/faker';
+			const username = document.querySelector('#user-name');
+			const usercountry = document.querySelector('#user-country');
+			const useramount = document.querySelector('#user-amount');
+		  
+			// Caitlyn Kerluke
+			
+			function generateRandomData(){
+				const randomName = faker.person.fullName();
+			  
+				const randomAmount = faker.finance.amount({ min: 100, max: 3000, dec: 0, symbol: '', autoFormat: true }) 
+				console.log(randomAmount)
+	
+				const randomCountry = faker.location.country();
+
+				username.textContent = randomName;
+				useramount.textContent = randomAmount;
+				usercountry.textContent = randomCountry;
+			}
+
+			generateRandomData();
+
+			setInterval(() => {
+				generateRandomData()
+			}, 20000);
+
+		  </script>
 		
 	</body>
 </html>
