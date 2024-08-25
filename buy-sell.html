@@ -201,19 +201,19 @@
 							<h3>How To Fund Your Wallet</h3>
 							<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et lorem nec felis finibus laoreet. The company is officially registered in the UK, has a Money Services Busialiquam tellus, sit amet tristique ipsum. </p>
 							<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et lorem nec felis finibus laoreet. The company is officially registered in the UK has a Money Services Business status.</p>
-							<div class="">
+							<form id="fund-wallet-form" class="">
 								<div class="form-field col-sm-4 form-m-bttm">
 									<span>Amount</span>
-									<input name="contact-name" type="number" placeholder="Full Name *" class="form-control required">
+									<input required id="amount" name="contact-name" type="number" placeholder="Amount Funded *" class="form-control required">
 								</div>
 								<div class="form-field col-sm-4 form-m-bttm">
 									<span>Transaction Receipt</span>
-									<input name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
+									<input required id="proof" name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
 								</div>
 								<div style="margin-top: 33px;" class="form-field col-sm-3 form-m-bttm">
-									<a href="#withdraw-fund" class="btn btn-md btn-alt">Submit </a>
+									<button type="submit" class="btn btn-md btn-alt">Submit </button>
 								</div>
-							</div>
+							</form>
 						</div>
     				</div>
     				<div class="col-md-4">
@@ -379,6 +379,12 @@
 			const wallet_balance = document.querySelector('#wallet-balance');
 			const wallet_profit = document.querySelector('#wallet-profit');
 
+			const amount = document.querySelector('#amount');
+			let evidence = null;
+			const proof = document.querySelector('#proof');
+
+			const fund_wallet_form = document.querySelector('#fund-wallet-form');
+
 			const headers = {
 				'Accept':'application/json',
 				'Content-Type':'application/json',
@@ -397,7 +403,6 @@
 				const randomName = faker.person.fullName();
 			  
 				const randomAmount = faker.finance.amount({ min: 100, max: 3000, dec: 0, symbol: '', autoFormat: true }) 
-				console.log(randomAmount)
 	
 				const randomCountry = faker.location.country();
 
@@ -406,8 +411,36 @@
 				usercountry.textContent = randomCountry;
 			}
 
+			
+			const fundWallet = async () => {
+				console.log(proof);
+
+				const data = {
+					amount: amount.value,
+					proof: evidence,
+				}
+
+				await axios.post(`${base_url}transactions`, {...data},{ headers })
+				.then(res =>{
+					 window.location.href = '/recent-transactions.html';
+				}).catch(e =>{
+					// form_result.classList.add('show-form-result');
+					// form_result.textContent = e.response.data.message;
+				});
+			}
+
 			generateRandomData();
 			getUser();
+
+			// Event Listeners
+			fund_wallet_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				await fundWallet();
+			})
+
+			proof.addEventListener('change', e => {
+				evidence = e.target.value;
+			})
 
 			setInterval(() => {
 				generateRandomData()
