@@ -1417,4 +1417,5 @@ form label.error { display: none !important; }
 .yellow { color: yellow !important; font-weight: 500; }
 .red { color: red !important; font-weight: 500; }
 .font_500 { font-weight: 500; }
+.show-form-result{ display: block !important; }
 /* End */

@@ -144,7 +144,7 @@
 								<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 									<h3 class="heading-lead center">Login Your Account</h3>
 									<form id="login-form" class="form-signup">
-										<div class="form-results"></div>
+										<div  style="margin-bottom: 10px; font-weight: 500; color: red;" id="login-form-results" class="form-results"></div>
 										<div class="form-group">
 											<div class="form-field form-m-bttm">
 												<input required id="login-email" name="login-email" type="email" placeholder="Email *" class="form-control required email" aria-required="true">
@@ -166,40 +166,47 @@
 							<div class="row">
 								<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 									<h3 class="heading-lead center">Register An Account</h3>
-									<form class="form-signup" action="action.php" method="post">
-										<div class="form-results"></div>
+									<form id="register-form" class="form-signup">
+										<div style="margin-bottom: 10px; font-weight: 500; color: red;" id="register-form-results" class="form-results"></div>
 										<div class="form-group">
 											<div class="form-field form-m-bttm">
-												<input name="signup-name" type="text" placeholder="Name *" class="form-control required" aria-required="true">
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="form-field form-m-bttm">
-												<input name="signup-email" type="email" placeholder="Email *" class="form-control required email" aria-required="true">
+												<input required id="register-name" name="signup-name" type="text" placeholder="Name *" class="form-control required" aria-required="true">
 											</div>
 										</div>
 										<div class="form-group">
 											<div class="form-field form-m-bttm">
-												<input name="signup-phone" type="text" placeholder="Phone Number *" class="form-control required phone" aria-required="true">
+												<input required id="register-email" name="signup-email" type="email" placeholder="Email *" class="form-control required email" aria-required="true">
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="form-field form-m-bttm">
+												<input required id="register-phone" name="signup-phone" type="text" placeholder="Phone Number *" class="form-control required phone" aria-required="true">
+											</div>
+										</div>
+										<div class="form-group">
+											<select required id="register-gender" class="form-control" placeholder="gender">
+												<option value="">Gender</option>
+												<option value="Male">MALE</option>
+												<option value="Female">FEMALE</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<div class="form-field">
+												<input min="8" required id="register-password" name="signup-passkey" type="password" placeholder="Password *" class="form-control required" aria-required="true">
 											</div>
 										</div>
 										<div class="form-group">
 											<div class="form-field">
-												<input name="signup-passkey" type="password" placeholder="Password *" class="form-control required" aria-required="true">
+												<input min="8" required id="register-confirm_password" name="signup-passkey-confirm" type="password" placeholder="Confirm Password *" class="form-control required" aria-required="true">
 											</div>
 										</div>
 										<div class="form-group">
 											<div class="form-field">
-												<input name="signup-passkey-confirm" type="password" placeholder="Confirm Password *" class="form-control required" aria-required="true">
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="form-field">
-												<input type="checkbox" name="signup-term"> <span> I accept and agree with the terms of the <a href="#">User Agreement</a>.</span>
+												<input required id="register-terms" type="checkbox" name="signup-term"> <span> I accept and agree with the terms of the <a href="#">User Agreement</a>.</span>
 											</div>
 										</div>
 
-										<button type="submit" class="btn btn-alt">Signup</button>
+										<button id="submit-register" type="submit" class="btn btn-alt">Signup</button>
 										<span class="gaps"></span>
 										<p class="small">Already registered? <a class="switch-tab" data-tabnav="loginreg-form" href="#tab1" data-toggle="tab">Login here</a></p>
 									</form>
@@ -332,9 +339,20 @@
 		<script src="assets/js/script.js"></script>
 		<script>
 			const base_url='http://127.0.0.1:8000/api/';
+			const login_form_result = document.querySelector('#login-form-results');
 			const login_form = document.querySelector('#login-form');
 			const login_email = document.querySelector('#login-email');
 			const login_password = document.querySelector('#login-password');
+			
+			const register_form_result = document.querySelector('#register-form-results');
+			const register_form = document.querySelector('#register-form');
+			const register_email = document.querySelector('#register-email');
+			const register_name = document.querySelector('#register-name');
+			const register_phone = document.querySelector('#register-phone');
+			const register_gender = document.querySelector('#register-gender');
+			const register_password = document.querySelector('#register-password');
+			const register_confirm_password = document.querySelector('#register-confirm_password');
+			
 
 			const headers = {
 				'Accept':'application/json',
@@ -343,12 +361,32 @@
 
 			const login = async (payload) => {
 				console.log(payload)
+				login_form_result.classList.remove('show-form-result');
 				await axios.post(`${base_url}login`,{ ...payload },{ headers })
 				.then(res =>{
 					localStorage.setItem('crypto_token', res.data.token);
 					localStorage.setItem('user', JSON.stringify(res.data.user));
 					window.location.href ='/buy-sell.html';
-				}).catch(e => console.log(e.message));
+				}).catch(e => {
+					console.log(login_form_result)
+					login_form_result.classList.add('show-form-result');
+					login_form_result.textContent = e.response.data.error;
+				});
+			}
+
+			const register = async (payload) => {
+				console.log(payload)
+				register_form_result.classList.remove('show-form-result');
+				await axios.post(`${base_url}register`,{ ...payload },{ headers })
+				.then(res =>{
+					// localStorage.setItem('crypto_token', res.data.token);
+					// localStorage.setItem('user', JSON.stringify(res.data.user));
+					window.location.href ='/signup.html';
+
+				}).catch(e =>{
+					register_form_result.classList.add('show-form-result');
+					register_form_result.textContent = e.response.data.message.split('.')[0];
+			});
 			}
 
 			login_form.addEventListener('submit', async (e) => {
@@ -359,6 +397,19 @@
 				}
 
 				await login(payload);
+			})
+
+			register_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const payload = {
+					name:register_name.value,
+					email:register_email.value,
+					gender:register_gender.value,
+					phone:register_phone.value,
+					password:register_password.value,
+				}
+
+				await register(payload);
 			})
 
 		</script>
