@@ -99,28 +99,32 @@
 					<div class="col-md-8 res-m-bttm">
 						<div class="contact-form">
 							<h4 style="margin-bottom: 20px;">Personal Info</h4>
-							<form id="contact-form" class="form-message" action="form/contact.php" method="post">
+							<form id="personal-info-form" class="form-message" action="form/contact.php" method="post">
 								<div class="form-results"></div>
 								<!-- <div style="background-color: #f8f8f8; border-radius: 10px; width: 200px; height: 200px;" class="user-image"></div> -->
 								<div style="margin-top: 25px;" class="form-group row">
 									<div class="form-field col-sm-6">
-										<input name="contact-subject" type="text" placeholder="First Name *" class="form-control required">
+										<input id="name" name="contact-subject" type="text" placeholder="First Name *" class="form-control required">
 									</div>
 									<div class="form-field col-sm-6 form-m-bttm">
-										<input name="contact-name" type="text" placeholder="Last Name *" class="form-control required">
+										<select id="gender" class="form-control" placeholder="gender">
+											<option value="Female">FEMALE</option>
+											<option value="Male">MALE</option>
+										</select>
+										<!-- <input name="contact-name" type="text" placeholder="Last Name *" class="form-control required"> -->
 									</div>
 								</div>
 								<div class="form-group row">
 									<div class="form-field col-sm-6 form-m-bttm">
-										<input name="contact-phone" type="text" placeholder="Phone Number *" class="form-control required">
+										<input id="phone" name="contact-phone" type="text" placeholder="Phone Number *" class="form-control required">
 									</div>
 									<div class="form-field col-sm-6">
-										<input name="contact-email" type="email" placeholder="Email *" class="form-control required email">
+										<input disabled id="email" name="contact-email" type="email" placeholder="Email *" class="form-control required email">
 									</div>
 								</div>
 								<div class="form-group row">
 									<div class="form-field col-md-12">
-										<textarea name="contact-message" placeholder="Address" class="txtarea form-control required"></textarea>
+										<textarea id="address" name="contact-message" placeholder="Address" class="txtarea form-control required"></textarea>
 									</div>
 								</div>
 								<input type="text" class="hidden" name="form-anti-honeypot" value="">
@@ -133,7 +137,7 @@
 								<div class="form-results"></div>
 								<div style="margin-top: 25px;" class="form-group row">
 									<div class="form-field col-sm-12 form-m-bttm">
-										<input name="contact-name" type="text" placeholder="Bitcoin wallet address *" class="form-control required">
+										<input id="bitcoin" name="contact-name" type="text" placeholder="Bitcoin wallet address *" class="form-control required">
 									</div>
 									<!-- <div class="form-field col-sm-6">
 										<input name="contact-email" type="email" placeholder="Email *" class="form-control required email">
@@ -141,12 +145,17 @@
 								</div>
 								<div class="form-group row">
 									<div class="form-field col-sm-12 form-m-bttm">
-										<input name="contact-phone" type="text" placeholder="Ethereum wallet address*" class="form-control required">
+										<input id="ethereum" name="contact-phone" type="text" placeholder="Ethereum wallet address*" class="form-control required">
 									</div> 
 								</div>
 								<div class="form-group row">
 									<div class="form-field col-sm-12">
-										<input name="contact-subject" type="text" placeholder="Solanar wallet address *" class="form-control required">
+										<input id="solanar" name="contact-subject" type="text" placeholder="Solanar wallet address *" class="form-control required">
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="form-field col-sm-12">
+										<input id="usdt" name="contact-subject" type="text" placeholder="USDT wallet address *" class="form-control required">
 									</div>
 								</div>
 								<!-- <div class="form-group row">
@@ -313,6 +322,49 @@
 		
 		<script src="assets/js/jquery.bundle.js"></script>
 		<script src="assets/js/script.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+		<script>
+			const base_url='http://127.0.0.1:8000/api/';
+			const headers = {
+				'Accept':'application/json',
+				'Content-Type':'application/json',
+				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
+			}
+
+			const name = document.querySelector('#name');
+			const phone = document.querySelector('#phone');
+			const email = document.querySelector('#email');
+			const address = document.querySelector('#address');
+			const gender = document.querySelector('#gender');
+			const bitcoin = document.querySelector('#bitcoin');
+			const solanar = document.querySelector('#solanar');
+			const ethereum = document.querySelector('#ethereum');
+			const usdt = document.querySelector('#usdt');
+			
+
+			const getUser = async () => {
+				await axios.get(`${base_url}profile`,{ headers })
+				.then(res =>{
+					name.defaultValue = res.data.data.name;
+					phone.defaultValue = res.data.data.phone;
+					email.defaultValue = res.data.data.email;
+					gender.selected = res.data.data.gender;
+					address.defaultValue = res.data.data.address ?? "";
+					
+					bitcoin.value = res.data.data.wallet.bitcoin_wallet_address;
+					solanar.value = res.data.data.wallet.solanar_wallet_address;
+					usdt.value = res.data.data.wallet.usdt_wallet_address;
+					ethereum.value = res.data.data.wallet.ethereum_wallet_address ?? "";
+				}).catch(e => console.log(e.message));
+			}
+
+
+			// Function calls
+			getUser();
+
+
+		</script>
 		
 	</body>
 </html>

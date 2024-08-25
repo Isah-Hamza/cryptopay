@@ -143,19 +143,19 @@
 							<div class="row">
 								<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 									<h3 class="heading-lead center">Login Your Account</h3>
-									<form class="form-signup" action="action.php" method="post">
+									<form id="login-form" class="form-signup">
 										<div class="form-results"></div>
 										<div class="form-group">
 											<div class="form-field form-m-bttm">
-												<input name="signup-email" type="email" placeholder="Email *" class="form-control required email" aria-required="true">
+												<input required id="login-email" name="login-email" type="email" placeholder="Email *" class="form-control required email" aria-required="true">
 											</div>
 										</div>
 										<div class="form-group">
 											<div class="form-field">
-												<input name="signup-passkey" type="password" placeholder="Password *" class="form-control required" aria-required="true">
+												<input required id="login-password" name="login-password" type="password" placeholder="Password *" class="form-control required" aria-required="true">
 											</div>
 										</div>
-										<button type="submit" class="btn btn-alt">Log In</button>
+										<button id="submit-login" type="submit" class="btn btn-alt">Log In</button>
 										<span class="gaps"></span>
 										<p class="small">Not registered? <a class="switch-tab" data-tabnav="loginreg-form" href="#tab2" data-toggle="tab">Register here</a></p>
 									</form>
@@ -326,9 +326,42 @@
 		<!-- JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
 		<script src="assets/js/jquery.bundle.js"></script>
 		<script src="assets/js/script.js"></script>
+		<script>
+			const base_url='http://127.0.0.1:8000/api/';
+			const login_form = document.querySelector('#login-form');
+			const login_email = document.querySelector('#login-email');
+			const login_password = document.querySelector('#login-password');
+
+			const headers = {
+				'Accept':'application/json',
+				'Content-Type':'application/json'
+			}
+
+			const login = async (payload) => {
+				console.log(payload)
+				await axios.post(`${base_url}login`,{ ...payload },{ headers })
+				.then(res =>{
+					localStorage.setItem('crypto_token', res.data.token);
+					localStorage.setItem('user', JSON.stringify(res.data.user));
+					window.location.href ='/buy-sell.html';
+				}).catch(e => console.log(e.message));
+			}
+
+			login_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const payload = {
+					email:login_email.value,
+					password:login_password.value,
+				}
+
+				await login(payload);
+			})
+
+		</script>
 		
 	</body>
 </html>

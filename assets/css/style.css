@@ -1413,4 +1413,8 @@ form label.error { display: none !important; }
 .cryptonatorwidget td:last-of-type:after { position: absolute; top: 33px; right: 30px; height: 0; width: 0; z-index: 2; content: ""; border-top: 5px solid #3c3c3c; border-left: 5px solid transparent; border-right: 5px solid transparent; }
 .cryptonatorwidget input, .cryptonatorwidget select { border: none; border-radius: 4px; padding: 0 15px; height: 50px !important; text-transform: capitalize; margin: 10px 0; color: #3c3c3c; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 
+.green { color: green !important; font-weight: 500; }
+.yellow { color: yellow !important; font-weight: 500; }
+.red { color: red !important; font-weight: 500; }
+.font_500 { font-weight: 500; }
 /* End */

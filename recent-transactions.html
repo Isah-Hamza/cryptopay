@@ -114,7 +114,7 @@
 							<table class="table">
 							<thead>
 								<tr>
-									<th>Transaction ID</th>
+									<th>S/NO</th>
 									<th>Transaction Type</th>
 									<th>Amount</th>
 									<th>Profit Made</th>
@@ -123,70 +123,7 @@
 									<th>Status</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>jry9-sv99-upva-aepe</td>
-									<td>Wallet Funding</td>
-									<td> <b>$350</b></td>
-									<td> <b>$38</b></td>
-									<td>09 January, 2024</td>
-									<td>09:28 AM</td>
-									<td>completed</td>
-								</tr>
-								<tr>
-									<td>svoi-k353-ldt0-23jh</td>
-									<td>Wallet Funding</td>
-									<td><b>$500</b> </td>
-									<td><b>$42</b></td>
-									<td>11 May, 2024</td>
-									<td>12:55 PM</td>
-									<td>completed</td>
-								</tr>
-								<tr>
-									<td>23jk-34hk-iuyh-otfk</td>
-									<td>Fund Withdrawal</td>
-									<td> <b>$100</b></td>
-									<td>-</td>
-									<td>10 July, 2024</td>
-									<td>10:32 AM</td>
-									<td>completed</td>
-								</tr>
-								<tr>
-									<td>oyuh-9gik-j23j-stg5</td>
-									<td>Wallet Funding</td>
-									<td><b>$200</b></td>
-									<td> <b>$0</b></td>
-									<td>13 August, 2024</td>
-									<td>06:33 PM</td>
-									<td>pending</td>
-								</tr>
-								<tr>
-									<td>luiw-uyhj-kesd-y3ew</td>
-									<td>Wallet Funding</td>
-									<td><b>$1,200 </b></td>
-									<td>-</td>
-									<td>15 August, 2024</td>
-									<td>11:41 AM</td>
-									<td>completed</td>
-								</tr>
-								<tr>
-									<td>jry9-sv99-upva-aepe</td>
-									<td>Wallet Funding</td>
-									<td> <b>$350</b></td>
-									<td> <b>$38</b></td>
-									<td>09 January, 2024</td>
-									<td>09:28 AM</td>
-									<td>completed</td>
-								</tr>
-								<tr>
-									<td>svoi-k353-ldt0-23jh</td>
-									<td>Wallet Funding</td>
-									<td><b>$5,500</b> </td>
-									<td><b>$215</b></td>
-									<td>11 May, 2024</td>
-									<td>12:55 PM</td>
-									<td>completed</td>
-								</tr>
+							<tbody id="tbody">
 							</tbody>
 							</table>
 						</div>
@@ -311,9 +248,104 @@
 		<!-- JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
 		<script src="assets/js/jquery.bundle.js"></script>
 		<script src="assets/js/script.js"></script>
+
+		<script>
+			const tbody = document.querySelector('#tbody');
+			const base_url='http://127.0.0.1:8000/api/';
+			const headers = {
+				'Accept':'application/json',
+				'Content-Type':'application/json',
+				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
+			}
+			let transactions = [];
+			const statuses = {
+				1:"Pending",
+				2:"Completed",
+				3:"Rejected",
+			}
+
+			function formatDate(isoDate,type) {
+				console.log(isoDate);
+				const date = new Date(isoDate);
+				const options = {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric',
+				};
+
+				const formattedDate = date.toLocaleString('en-US', options);
+
+				const formattedTime = date.toLocaleTimeString('en-US',   
+				{
+					hour: 'numeric',
+					minute: 'numeric',
+					second: 'numeric',
+					timeZoneName: 'short'
+				});
+
+				if(type == 'date') return formattedDate
+				else return formattedTime
+				// return { formattedDate, formattedTime };
+			}
+
+			const getTransactions = async () => {
+				await axios.get(`${base_url}user-transactions`,{ headers })
+				.then(res =>{
+					transactions = res.data.data.data;
+					console.log(transactions);
+
+					transactions.map(item => {
+						const tr = document.createElement('tr')
+
+						const id = document.createElement('td')
+						id.textContent = item.id;
+						tr.appendChild(id);
+						
+						const type = document.createElement('td')
+						type.textContent = item.type ?? 'Wallet Funding';
+						tr.appendChild(type);
+						
+						const amount = document.createElement('td')
+						amount.textContent = `$${item.amount.toLocaleString('en-US')}`;
+						amount.classList.add('font_500');
+						tr.appendChild(amount);
+						
+						const profit = document.createElement('td')
+						profit.textContent = `$${item.profit.toLocaleString('en-US')}`;
+						profit.classList.add('font_500');
+						tr.appendChild(profit);
+						
+						const date = document.createElement('td')
+						const date_result = formatDate(item.created_at,'date');
+						date.innerText = date_result;
+						tr.appendChild(date);
+						
+						const time = document.createElement('td')
+						const result = formatDate(item.created_at,'time');
+						time.innerText = result.split('GMT')[0];
+						tr.appendChild(time);
+						
+						const status = document.createElement('td')
+						status.innerText = statuses[item.status];
+						status.classList.add( item.status == '1' ?'yellow': item.status == '2' ? 'green' : 'red');
+						tr.appendChild(status);
+
+						tbody.appendChild(tr);
+
+					})
+
+				}).catch(e => console.log(e.message));
+			}
+
+
+			// Function calls
+			getTransactions();
+
+		</script>
 		
 	</body>
 </html>

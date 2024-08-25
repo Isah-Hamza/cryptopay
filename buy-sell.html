@@ -158,14 +158,14 @@
       				<div class="col-md-3 col-md-offset-0 col-sm-6 col-sm-offset-2 res-m-bttm">
       					<div class="box round shadow-alt">
       						<img src="images/box-icon-e.png" alt="box-icon" class="box-icon">
-      						<h6 class="ucap">$0.00</h6>
+      						<h6 class="ucap">$<b id="wallet-balance">0</b>.00</h6>
       						<p class="small">Active Wallet Balance.</p>
       					</div>
       				</div>
       				<div class="col-md-3 col-md-offset-0 col-sm-6 col-sm-offset-2">
       					<div class="box round shadow-alt">
       						<img src="images/box-icon-c.png" alt="box-icon" class="box-icon">
-      						<h6 class="ucap">$0.00</h6>
+      						<h6 class="ucap">$<b id="wallet-profit">0</b>.00</h6>
       						<p class="small">Total Profit Earned</p>
       					</div>
       				</div>
@@ -366,17 +366,32 @@
 		<!-- JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
 		<script src="assets/js/jquery.bundle.js"></script>
 		<script src="assets/js/script.js"></script>
 
 		<script type="module">
 			import { faker } from 'https://esm.sh/@faker-js/faker';
+			const base_url='http://127.0.0.1:8000/api/';
 			const username = document.querySelector('#user-name');
 			const usercountry = document.querySelector('#user-country');
 			const useramount = document.querySelector('#user-amount');
+			const wallet_balance = document.querySelector('#wallet-balance');
+			const wallet_profit = document.querySelector('#wallet-profit');
+
+			const headers = {
+				'Accept':'application/json',
+				'Content-Type':'application/json',
+				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
+			}
 		  
-			// Caitlyn Kerluke
+			const getUser = async () => {
+				await axios.get(`${base_url}profile`,{ headers })
+				.then(res =>{
+					wallet_balance.textContent = res.data.data.wallet.amount.toLocaleString('en-US');
+					wallet_profit.textContent = res.data.data.wallet.profit.toLocaleString('en-US');
+				}).catch(e => console.log(e.message));
+			}
 			
 			function generateRandomData(){
 				const randomName = faker.person.fullName();
@@ -392,6 +407,7 @@
 			}
 
 			generateRandomData();
+			getUser();
 
 			setInterval(() => {
 				generateRandomData()
