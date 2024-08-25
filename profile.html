@@ -99,7 +99,7 @@
 					<div class="col-md-8 res-m-bttm">
 						<div class="contact-form">
 							<h4 style="margin-bottom: 20px;">Personal Info</h4>
-							<form id="personal-info-form" class="form-message" action="form/contact.php" method="post">
+							<form id="personal-info-form" class="form-message">
 								<div class="form-results"></div>
 								<!-- <div style="background-color: #f8f8f8; border-radius: 10px; width: 200px; height: 200px;" class="user-image"></div> -->
 								<div style="margin-top: 25px;" class="form-group row">
@@ -333,11 +333,14 @@
 				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
 			}
 
+			const profile_form = document.querySelector('#personal-info-form');
+
 			const name = document.querySelector('#name');
 			const phone = document.querySelector('#phone');
 			const email = document.querySelector('#email');
 			const address = document.querySelector('#address');
 			const gender = document.querySelector('#gender');
+
 			const bitcoin = document.querySelector('#bitcoin');
 			const solanar = document.querySelector('#solanar');
 			const ethereum = document.querySelector('#ethereum');
@@ -359,6 +362,25 @@
 					ethereum.value = res.data.data.wallet.ethereum_wallet_address ?? "";
 				}).catch(e => console.log(e.message));
 			}
+
+			const updateProfile = async () => {
+				const data = {
+					name: name.value,
+					phone: phone.value,
+					gender: gender.value,
+					address: address.value,
+				}
+				await axios.patch(`${base_url}profile`, {...data},{ headers })
+				.then(res =>{
+					 window.location.reload();
+				}).catch(e => console.log(e.message));
+			}
+
+			// Event Listeners
+			profile_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				await updateProfile();
+			})
 
 
 			// Function calls
