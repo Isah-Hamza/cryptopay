@@ -100,7 +100,6 @@
 						<div class="contact-form">
 							<h4 style="margin-bottom: 20px;">Personal Info</h4>
 							<form id="personal-info-form" class="form-message">
-								<div class="form-results"></div>
 								<!-- <div style="background-color: #f8f8f8; border-radius: 10px; width: 200px; height: 200px;" class="user-image"></div> -->
 								<div style="margin-top: 25px;" class="form-group row">
 									<div class="form-field col-sm-6">
@@ -134,8 +133,7 @@
 						</div>
 						<div style="margin-top: 50px;" class="contact-form">
 							<h4 style="margin-bottom: 20px;">Withdrawal Details</h4>
-							<form id="contact-form" class="form-message" action="form/contact.php" method="post">
-								<div class="form-results"></div>
+							<form id="wallet-form" class="form-message">
 								<div style="margin-top: 25px;" class="form-group row">
 									<div class="form-field col-sm-12 form-m-bttm">
 										<input id="bitcoin" name="contact-name" type="text" placeholder="Bitcoin wallet address *" class="form-control required">
@@ -159,22 +157,17 @@
 										<input id="usdt" name="contact-subject" type="text" placeholder="USDT wallet address *" class="form-control required">
 									</div>
 								</div>
-								<!-- <div class="form-group row">
-									<div class="form-field col-md-12">
-										<textarea name="contact-message" placeholder="Messages *" class="txtarea form-control required"></textarea>
-									</div>
-								</div> -->
 								<input type="text" class="hidden" name="form-anti-honeypot" value="">
 								<button type="submit" class="btn btn-alt">Save Changes</button>
 							</form>
 						</div>
 						<div style="margin-top: 50px;" class="contact-form">
 							<h4 style="margin-bottom: 20px;">Security</h4>
-							<form id="contact-form" class="form-message" action="form/contact.php" method="post">
-								<div class="form-results"></div>
+							<form id="password-form" class="form-message">
+								<div  style="margin-bottom: 10px; font-weight: 500; color: red;" id="form-results" class="form-results"></div>
 								<div style="margin-top: 25px;" class="form-group row">
 									<div class="form-field col-sm-12 form-m-bttm">
-										<input name="contact-name" type="password" placeholder="Old Password *" class="form-control required">
+										<input id="old_password" name="contact-name" type="password" placeholder="Old Password *" class="form-control required">
 									</div>
 									<!-- <div class="form-field col-sm-6">
 										<input name="contact-email" type="email" placeholder="Email *" class="form-control required email">
@@ -182,10 +175,10 @@
 								</div>
 								<div class="form-group row">
 									<div class="form-field col-sm-6 form-m-bttm">
-										<input name="contact-phone" type="password" placeholder="New Password *" class="form-control required">
+										<input id="new_password" name="contact-phone" type="password" placeholder="New Password *" class="form-control required">
 									</div>
 									<div class="form-field col-sm-6">
-										<input name="contact-subject" type="password" placeholder="Confirm New Password *" class="form-control required">
+										<input id="password_confirmation" name="contact-subject" type="password" placeholder="Confirm New Password *" class="form-control required">
 									</div>
 								</div>
 								<input type="password" class="hidden" name="form-anti-honeypot" value="">
@@ -326,6 +319,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
 
 		<script>
+			let wallet_id = null;
 			const base_url='http://127.0.0.1:8000/api/';
 			const headers = {
 				'Accept':'application/json',
@@ -333,7 +327,10 @@
 				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
 			}
 
+			const form_result = document.querySelector('#form-results');
 			const profile_form = document.querySelector('#personal-info-form');
+			const wallet_form = document.querySelector('#wallet-form');
+			const password_form = document.querySelector('#password-form');
 
 			const name = document.querySelector('#name');
 			const phone = document.querySelector('#phone');
@@ -346,10 +343,16 @@
 			const ethereum = document.querySelector('#ethereum');
 			const usdt = document.querySelector('#usdt');
 			
+			const old_password = document.querySelector('#old_password');
+			const new_password = document.querySelector('#new_password');
+			const password_confirmation = document.querySelector('#password_confirmation');
+			
+			
 
 			const getUser = async () => {
 				await axios.get(`${base_url}profile`,{ headers })
 				.then(res =>{
+					wallet_id = res.data.data.wallet_id;
 					name.defaultValue = res.data.data.name;
 					phone.defaultValue = res.data.data.phone;
 					email.defaultValue = res.data.data.email;
@@ -376,12 +379,52 @@
 				}).catch(e => console.log(e.message));
 			}
 
+			const updateWallet = async () => {
+				const data = {
+					ethereum_wallet_address: ethereum.value,
+					solanar_wallet_address: solanar.value,
+					usdt_wallet_address: usdt.value,
+					bitcoin_wallet_address: bitcoin.value,
+				}
+
+				await axios.patch(`${base_url}wallet/${wallet_id}`, {...data},{ headers })
+				.then(res =>{
+					 window.location.reload();
+				}).catch(e => console.log(e.message));
+			}
+
+			const changePassword = async () => {
+				const data = {
+					old_password: old_password.value,
+					new_password: new_password.value,
+				}
+
+				form_result.classList.remove('show-form-result');
+				await axios.post(`${base_url}change-password`, {...data},{ headers })
+				.then(res =>{
+					 window.location.reload();
+				}).catch(e =>{
+					form_result.classList.add('show-form-result');
+					form_result.textContent = e.response.data.message;
+				});
+			}
+
+
 			// Event Listeners
 			profile_form.addEventListener('submit', async (e) => {
 				e.preventDefault();
 				await updateProfile();
 			})
 
+			wallet_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				await updateWallet();
+			})
+
+			password_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				await changePassword();
+			})
 
 			// Function calls
 			getUser();
