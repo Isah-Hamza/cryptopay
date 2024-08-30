@@ -1444,4 +1444,9 @@ form label.error { display: none !important; }
   outline: 1px solid var(--bg-light-primary);
 }
 [data-text="Home"]{ display: none !important; }
+
+.tradingview-widget-copyright{
+  display: none;
+}
+
 /* End */
