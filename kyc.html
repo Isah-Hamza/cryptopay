@@ -161,60 +161,24 @@
 												<input required id="login-password" name="login-password" type="password" placeholder="Login Password *" class="form-control required" aria-required="true">
 											</div>
 										</div>
-										<button id="submit-login" type="submit" class="btn btn-alt">Submit Information</button>
-										<span class="gaps"></span>
-										<p class="small">Dont't have an account? <a class="switch-tab" data-tabnav="loginreg-form" href="/signup.html">Register here</a></p>
-									</form>
-								</div>
-							</div>
-						</div>
-						<div class="tab-pane fade" id="tab2">
-							<div class="row">
-								<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-									<h3 class="heading-lead center">Register An Account</h3>
-									<form id="register-form" class="form-signup">
-										<div style="margin-bottom: 10px; font-weight: 500; color: red;" id="register-form-results" class="form-results"></div>
 										<div class="form-group">
-											<div class="form-field form-m-bttm">
-												<input required id="register-name" name="signup-name" type="text" placeholder="Name *" class="form-control required" aria-required="true">
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="form-field form-m-bttm">
-												<input required id="register-email" name="signup-email" type="email" placeholder="Email *" class="form-control required email" aria-required="true">
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="form-field form-m-bttm">
-												<input required id="register-phone" name="signup-phone" type="text" placeholder="Phone Number *" class="form-control required phone" aria-required="true">
-											</div>
-										</div>
-										<div class="form-group">
-											<select required id="register-gender" class="form-control" placeholder="gender">
-												<option value="">Gender</option>
-												<option value="Male">MALE</option>
-												<option value="Female">FEMALE</option>
+											<select required id="login-means-of-identification" class="form-control" placeholder="gender">
+												<option value="Means of Identification">Means of Identification</option>
+												<option value="National Identification Number">National Identification Number</option>
+												<option value="Bank Verification Number">Bank Verification Number</option>
+												<option value="tate Security Number">State Security Number</option>
+												<option value="Driver's Licence">Driver's Licence</option>
+												<option value="Voter's Card">Voter's Card</option>
 											</select>
 										</div>
 										<div class="form-group">
 											<div class="form-field">
-												<input min="8" required id="register-password" name="signup-passkey" type="password" placeholder="Password *" class="form-control required" aria-required="true">
+												<input required id="login-identification-number" name="identification-number" type="text" placeholder="Identification Number *" class="form-control required" aria-required="true">
 											</div>
 										</div>
-										<div class="form-group">
-											<div class="form-field">
-												<input min="8" required id="register-confirm_password" name="signup-passkey-confirm" type="password" placeholder="Confirm Password *" class="form-control required" aria-required="true">
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="form-field">
-												<input required id="register-terms" type="checkbox" name="signup-term"> <span> I accept and agree with the terms of the <a href="#">User Agreement</a>.</span>
-											</div>
-										</div>
-
-										<button id="submit-register" type="submit" class="btn btn-alt">Signup</button>
+										<button id="submit-login" type="submit" class="btn btn-alt">Submit Information</button>
 										<span class="gaps"></span>
-										<p class="small">Already registered? <a class="switch-tab" data-tabnav="loginreg-form" href="#tab1" data-toggle="tab">Login here</a></p>
+										<p class="small">Dont't have an account? <a class="switch-tab" data-tabnav="loginreg-form" href="/signup.html">Register here</a></p>
 									</form>
 								</div>
 							</div>
@@ -348,74 +312,41 @@
 			const login_form_result = document.querySelector('#login-form-results');
 			const login_form = document.querySelector('#login-form');
 			const login_email = document.querySelector('#login-email');
+			const login_phone = document.querySelector('#login-phone');
 			const login_password = document.querySelector('#login-password');
-			
-			const register_form_result = document.querySelector('#register-form-results');
-			const register_form = document.querySelector('#register-form');
-			const register_email = document.querySelector('#register-email');
-			const register_name = document.querySelector('#register-name');
-			const register_phone = document.querySelector('#register-phone');
-			const register_gender = document.querySelector('#register-gender');
-			const register_password = document.querySelector('#register-password');
-			const register_confirm_password = document.querySelector('#register-confirm_password');
-			
+			const login_means_of_identification = document.querySelector('#login-means-of-identification');
+			const login_identification_number = document.querySelector('#login-identification-number');
 
 			const headers = {
 				'Accept':'application/json',
-				'Content-Type':'application/json'
+				'Content-Type':'application/json',
+				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
 			}
 
 			const login = async (payload) => {
 				console.log(payload)
 				login_form_result.classList.remove('show-form-result');
-				await axios.post(`${base_url}login`,{ ...payload },{ headers })
+				await axios.post(`${base_url}kyc`,{ ...payload },{ headers })
 				.then(res =>{
-					localStorage.setItem('crypto_token', res.data.token);
-					localStorage.setItem('user', JSON.stringify(res.data.user));
-					window.location.href ='/buy-sell.html';
+					window.location.href ='/profile.html';
 				}).catch(e => {
-					console.log(login_form_result)
+					console.log(login_form_result);
 					login_form_result.classList.add('show-form-result');
-					login_form_result.textContent = e.response.data.error;
+					login_form_result.textContent = e?.response?.data?.error;
 				});
-			}
-
-			const register = async (payload) => {
-				console.log(payload)
-				register_form_result.classList.remove('show-form-result');
-				await axios.post(`${base_url}register`,{ ...payload },{ headers })
-				.then(res =>{
-					// localStorage.setItem('crypto_token', res.data.token);
-					// localStorage.setItem('user', JSON.stringify(res.data.user));
-					window.location.href ='/signup.html';
-
-				}).catch(e =>{
-					register_form_result.classList.add('show-form-result');
-					register_form_result.textContent = e.response.data.message.split('.')[0];
-			});
 			}
 
 			login_form.addEventListener('submit', async (e) => {
 				e.preventDefault();
 				const payload = {
-					email:login_email.value,
-					password:login_password.value,
+					email: login_email.value,
+					password: login_password.value,
+					phone: login_phone.value,
+					means_of_identification: login_means_of_identification.value,
+					identification_number:login_identification_number.value
 				}
 
 				await login(payload);
-			})
-
-			register_form.addEventListener('submit', async (e) => {
-				e.preventDefault();
-				const payload = {
-					name:register_name.value,
-					email:register_email.value,
-					gender:register_gender.value,
-					phone:register_phone.value,
-					password:register_password.value,
-				}
-
-				await register(payload);
 			})
 
 		</script>

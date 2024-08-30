@@ -1418,4 +1418,30 @@ form label.error { display: none !important; }
 .red { color: red !important; font-weight: 500; }
 .font_500 { font-weight: 500; }
 .show-form-result{ display: block !important; }
+.skiptranslate iframe {
+  display:  none !important;
+  height: 0px  !important;
+}
+/* .site-header.header-s1.is-sticky{
+  margin-top: -38px;
+} */
+
+.goog-te-gadget {
+  display: block;
+   height: 40px;
+   overflow:hidden;
+}
+  
+#google_translate_element{
+  width:100px
+}
+
+.goog-te-gadget select {
+  padding-left: 5px;
+  height: 30px;
+  width:100px;
+  border-radius: 6px !important;
+  outline: 1px solid var(--bg-light-primary);
+}
+[data-text="Home"]{ display: none !important; }
 /* End */

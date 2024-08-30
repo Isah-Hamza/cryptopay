@@ -98,6 +98,10 @@
 				<div class="row">
 					<div class="col-md-8 res-m-bttm">
 						<div class="contact-form">
+							<marquee class="hide not_done" style="color: #a84426;margin-bottom: 20px; font-weight: 600;"> <span class="glyphicon glyphicon-hand-right" ></span>  You have not submitted your KYC Verification form. </marquee>
+							<marquee class="hide pending" style="color: #f7921a;margin-bottom: 20px; font-weight: 600;"> <span class="glyphicon glyphicon-hand-right" ></span>   Please be informed that your KYC is pending approval.</marquee>
+							<marquee class="hide completed" style="color: #f7921a;margin-bottom: 20px; font-weight: 600;"><span class="glyphicon glyphicon-hand-right" ></span>  Please be informed that your KYC is pending approval.</marquee>
+							<marquee class="hide rejected" style="color: #e70a0a;margin-bottom: 20px; font-weight: 600;"> <span class="glyphicon glyphicon-hand-right" ></span>   Please be informed that your KYC is pending approval.</marquee>
 							<h4 style="margin-bottom: 20px;">Personal Info</h4>
 							<form id="personal-info-form" class="form-message">
 								<!-- <div style="background-color: #f8f8f8; border-radius: 10px; width: 200px; height: 200px;" class="user-image"></div> -->
@@ -347,6 +351,11 @@
 			const new_password = document.querySelector('#new_password');
 			const password_confirmation = document.querySelector('#password_confirmation');
 			
+			const not_done_marquee = document.querySelector('.not_done');
+			const pending_marquee = document.querySelector('.pending');
+			const completed_marquee = document.querySelector('.completed');
+			const rejected_marquee = document.querySelector('.rejected');
+
 			
 
 			const getUser = async () => {
@@ -363,6 +372,15 @@
 					solanar.value = res.data.data.wallet.solanar_wallet_address;
 					usdt.value = res.data.data.wallet.usdt_wallet_address;
 					ethereum.value = res.data.data.wallet.ethereum_wallet_address ?? "";
+
+					if(!res.data.data.kyc){
+						not_done_marquee.classList.remove('hide');
+					}else{
+						if(res.data.data.kyc.status == 1) pending_marquee.classList.remove('hide');
+						if(res.data.data.kyc.status == 2) completed_marquee.classList.remove('hide');
+						if(res.data.data.kyc.status == 3) rejected_marquee.classList.remove('hide');
+					}
+
 				}).catch(e => console.log(e.message));
 			}
 
