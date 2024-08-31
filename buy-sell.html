@@ -211,8 +211,8 @@
 									<span>Transaction Receipt</span>
 									<input required id="proof" name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
 								</div>
-								<div style="margin-top: 33px;" class="form-field col-sm-3 form-m-bttm">
-									<button type="submit" class="btn btn-md btn-alt">Submit </button>
+								<div style="margin-top: 33px; display: flex;" class="form-field col-sm-3 form-m-bttm">
+									<button style="margin-left: auto;" type="submit" class="btn btn-md btn-alt">Submit </button>
 								</div>
 							</form>
 						</div>
@@ -223,10 +223,11 @@
     							<img src="images/icon-b.png" alt="icon">
     						</div>
     						<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit</p>
-    						<ul>
-    							<li><b>Bitcoin</b>  - Lorem ipsum dolor sit amet.</li>
-    							<li><b>Solanar</b> - Many services nowadays offer.</li>
-    							<li><b>Ethereum</b> - Busialiquam tellus, sit amet.</li>
+    						<ul style="margin-top: 20px;">
+    							<li style="border-block: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin</b> <p id="bitcoin"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Solanar</b><p id="solanar"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Ethereum</b><p id="ethereum"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px;"><b>USDT</b><p id="usdt"></p> </li>
     						</ul>
     					</div>
     				</div>
@@ -379,6 +380,11 @@
 			const useramount = document.querySelector('#user-amount');
 			const wallet_balance = document.querySelector('#wallet-balance');
 			const wallet_profit = document.querySelector('#wallet-profit');
+			
+			const bitcoin = document.querySelector('#bitcoin');
+			const solanar = document.querySelector('#solanar');
+			const usdt = document.querySelector('#usdt');
+			const ethereum = document.querySelector('#ethereum');
 
 			const amount = document.querySelector('#amount');
 			let evidence = null;
@@ -399,6 +405,18 @@
 					wallet_profit.textContent = res.data.data.wallet.profit.toLocaleString('en-US');
 				}).catch(e => console.log(e.message));
 			}
+		  
+
+			const getPlatformWallet = async () => {
+				await axios.get(`${base_url}get-platform-wallet`,{ headers })
+				.then(res =>{
+					bitcoin.textContent = res.data.wallet.bitcoin_wallet_address;
+					solanar.textContent = res.data.wallet.solanar_wallet_address;
+					ethereum.textContent = res.data.wallet.ethereum_wallet_address;
+					usdt.textContent = res.data.wallet.usdt_wallet_address;
+				}).catch(e => console.log(e.message));
+			}
+
 			
 			function generateRandomData(){
 				const randomName = faker.person.fullName();
@@ -431,6 +449,7 @@
 			}
 
 			generateRandomData();
+			getPlatformWallet();
 			getUser();
 
 			// Event Listeners

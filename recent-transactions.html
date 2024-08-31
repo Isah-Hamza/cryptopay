@@ -299,11 +299,11 @@
 					transactions = res.data.data.data;
 					console.log(transactions);
 
-					transactions.map(item => {
+					transactions.map((item,idx) => {
 						const tr = document.createElement('tr')
 
 						const id = document.createElement('td')
-						id.textContent = item.id;
+						id.textContent = idx+1;
 						tr.appendChild(id);
 						
 						const type = document.createElement('td')
