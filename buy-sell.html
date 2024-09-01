@@ -15,6 +15,13 @@
 		<link href="assets/css/theme.css" rel="stylesheet">
 	</head>
 	<body>
+		<script type="text/javascript">
+			function googleTranslateElementInit() {
+			  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+			}
+		</script>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 	
 		<!-- Header --> 
 		<header class="site-header header-s1 is-sticky">
@@ -32,11 +39,12 @@
 						</div>
 						<div class="col-sm-6 al-right">
 							<ul class="top-nav">
-								<li><a href="faqs.html">Help & Support</a></li>
-								<li><a href="signup.html">Login</a></li>
 								<li><a href="signup.html">Register</a></li>
+								<li><a href="signup.html">Login</a></li>
 								<li><a href="profile.html">Profile</a></li>
 								<li><a href="kyc.html">KYC</a></li>
+								<li><a href="faqs.html">Help & Support</a></li>
+								<li><div id="google_translate_element"></div>								</li>
 							</ul>
 						</div>
 					</div>
@@ -224,7 +232,8 @@
     						</div>
     						<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit</p>
     						<ul style="margin-top: 20px;">
-    							<li style="border-block: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin</b> <p id="bitcoin"></p> </li>
+    							<li style="border-block: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin Wallet Address</b>
+									<p> <span class="glyphicon glyphicon-copy" ></span> <span>Click to copy</span> <p id="bitcoin"></p> </p></li>
     							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Solana</b><p id="solanar"></p> </li>
     							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Ethereum</b><p id="ethereum"></p> </li>
     							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px;"><b>USDT</b><p id="usdt"></p> </li>
