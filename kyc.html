@@ -299,6 +299,12 @@
 		<!-- Preloader !remove please if you do not want -->
 		<div id="preloader"><div id="status">&nbsp;</div></div>
 		<!-- Preloader End -->
+
+		<!-- Loader -->
+		<div class="custom-loader hide-element" >
+			<img width="40" src="./assets/images/loading.gif" alt="">
+		</div>
+		<!-- LoaderEnd -->
 		
 		<!-- JavaScript
 		================================================== -->
@@ -317,6 +323,10 @@
 			const login_means_of_identification = document.querySelector('#login-means-of-identification');
 			const login_identification_number = document.querySelector('#login-identification-number');
 
+			const loader = document.querySelector('.custom-loader');
+			const showLoader = () => loader.classList.remove('hide-element');
+			const hideLoader = () => loader.classList.add('hide-element');
+
 			const headers = {
 				'Accept':'application/json',
 				'Content-Type':'application/json',
@@ -326,6 +336,7 @@
 			const login = async (payload) => {
 				console.log(payload)
 				login_form_result.classList.remove('show-form-result');
+				showLoader()
 				await axios.post(`${base_url}kyc`,{ ...payload },{ headers })
 				.then(res =>{
 					window.location.href ='/profile.html';
@@ -334,6 +345,7 @@
 					login_form_result.classList.add('show-form-result');
 					login_form_result.textContent = e?.response?.data?.error;
 				});
+				hideLoader()
 			}
 
 			login_form.addEventListener('submit', async (e) => {

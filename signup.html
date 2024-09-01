@@ -13,6 +13,10 @@
 		<!-- Custom styles for this template -->
 		<link href="assets/css/style.css" rel="stylesheet">
 		<link href="assets/css/theme.css" rel="stylesheet">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" ></script>
 	</head>
 	<body>
 	
@@ -132,7 +136,7 @@
 					<div class="row">
 						<div class="col-md-4 col-md-offset-4  col-sm-6 col-sm-offset-3">
 							<ul class="nav nav-tabs ucap" id="loginreg-form">
-								<li class="active"><a href="#tab1" data-toggle="tab">Log In</a></li>
+								<li id="login-tab" class="active"><a href="#tab1" data-toggle="tab">Log In</a></li>
 								<li><a href="#tab2" data-toggle="tab">Register</a></li>
 							</ul>
 						</div>
@@ -330,20 +334,32 @@
 		<!-- Preloader !remove please if you do not want -->
 		<div id="preloader"><div id="status">&nbsp;</div></div>
 		<!-- Preloader End -->
+
+		<!-- Loader -->
+		<div class="custom-loader hide-element" >
+			<img width="40" src="./assets/images/loading.gif" alt="">
+		</div>
+		<!-- LoaderEnd -->
 		
 		<!-- JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
-		<script src="assets/js/jquery.bundle.js"></script>
+		<!-- <script src="assets/js/jquery.bundle.js"></script> -->
 		<script src="assets/js/script.js"></script>
+
 		<script>
 			const base_url='http://127.0.0.1:8000/api/';
 			const login_form_result = document.querySelector('#login-form-results');
 			const login_form = document.querySelector('#login-form');
+			const login_tab = document.querySelector('#login-tab');
 			const login_email = document.querySelector('#login-email');
 			const login_password = document.querySelector('#login-password');
+			const loader = document.querySelector('.custom-loader');
+			const showLoader = () => loader.classList.remove('hide-element');
+			const hideLoader = () => loader.classList.add('hide-element');
 			
 			const register_form_result = document.querySelector('#register-form-results');
 			const register_form = document.querySelector('#register-form');
@@ -361,33 +377,38 @@
 			}
 
 			const login = async (payload) => {
-				console.log(payload)
 				login_form_result.classList.remove('show-form-result');
+				showLoader();
 				await axios.post(`${base_url}login`,{ ...payload },{ headers })
 				.then(res =>{
 					localStorage.setItem('crypto_token', res.data.token);
 					localStorage.setItem('user', JSON.stringify(res.data.user));
+					toastr.success('Have fun storming the castle!', 'Miracle Max Says');
+
 					window.location.href ='/buy-sell.html';
 				}).catch(e => {
-					console.log(login_form_result)
 					login_form_result.classList.add('show-form-result');
-					login_form_result.textContent = e.response.data.error;
+					login_form_result.textContent = e.response?.data?.error;
 				});
+				hideLoader();
 			}
 
 			const register = async (payload) => {
 				console.log(payload)
+				showLoader();
 				register_form_result.classList.remove('show-form-result');
 				await axios.post(`${base_url}register`,{ ...payload },{ headers })
 				.then(res =>{
 					// localStorage.setItem('crypto_token', res.data.token);
 					// localStorage.setItem('user', JSON.stringify(res.data.user));
 					// window.location.href ='/signup.html';
-
+					login_tab.click();
+					
 				}).catch(e =>{
 					register_form_result.classList.add('show-form-result');
 					register_form_result.textContent = e.response.data.message.split('.')[0];
-			});
+				});
+				hideLoader();
 			}
 
 			login_form.addEventListener('submit', async (e) => {

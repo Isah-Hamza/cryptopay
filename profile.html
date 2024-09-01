@@ -309,6 +309,12 @@
 		<!-- Preloader !remove please if you do not want -->
 		<div id="preloader"><div id="status">&nbsp;</div></div> 
 		<!-- Preloader End -->
+
+				<!-- Loader -->
+				<div class="custom-loader hide-element" >
+					<img width="40" src="./assets/images/loading.gif" alt="">
+				</div>
+				<!-- LoaderEnd -->
 		
 		<!-- Google Map Script -->
 		<script src="https://maps.google.com/maps/api/js?key=AIzaSyD6cxB4idvB67_Mz1ScQn-_nBJmltUaS-g"></script> 
@@ -356,6 +362,11 @@
 			const completed_marquee = document.querySelector('.completed');
 			const rejected_marquee = document.querySelector('.rejected');
 
+
+			const loader = document.querySelector('.custom-loader');
+			const showLoader = () => loader.classList.remove('hide-element');
+			const hideLoader = () => loader.classList.add('hide-element');
+
 			
 
 			const getUser = async () => {
@@ -391,10 +402,12 @@
 					gender: gender.value,
 					address: address.value,
 				}
+				showLoader()
 				await axios.patch(`${base_url}profile`, {...data},{ headers })
 				.then(res =>{
 					 window.location.reload();
 				}).catch(e => console.log(e.message));
+				hideLoader()
 			}
 
 			const updateWallet = async () => {
@@ -405,10 +418,12 @@
 					bitcoin_wallet_address: bitcoin.value,
 				}
 
+				showLoader()
 				await axios.patch(`${base_url}wallet/${wallet_id}`, {...data},{ headers })
 				.then(res =>{
 					 window.location.reload();
 				}).catch(e => console.log(e.message));
+				hideLoader()
 			}
 
 			const changePassword = async () => {
@@ -418,6 +433,7 @@
 				}
 
 				form_result.classList.remove('show-form-result');
+				showLoader()
 				await axios.post(`${base_url}change-password`, {...data},{ headers })
 				.then(res =>{
 					 window.location.reload();
@@ -425,6 +441,7 @@
 					form_result.classList.add('show-form-result');
 					form_result.textContent = e.response.data.message;
 				});
+				hideLoader()
 			}
 
 

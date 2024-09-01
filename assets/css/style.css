@@ -1449,4 +1449,19 @@ form label.error { display: none !important; }
   display: none;
 }
 
+.custom-loader{
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh; 
+  display: grid; 
+  place-content: center; 
+  background: rgba(0, 0, 0, .5); 
+  z-index: 10;
+}
+
+.hide-element{
+  display: none !important;
+}
 /* End */

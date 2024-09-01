@@ -364,6 +364,12 @@
 		<!-- Preloader !remove please if you do not want -->
 		<div id="preloader"><div id="status">&nbsp;</div></div> 
 		<!-- Preloader End -->
+
+		<!-- Loader -->
+		<div class="custom-loader hide-element" >
+			<img width="40" src="./assets/images/loading.gif" alt="">
+		</div>
+		<!-- LoaderEnd -->
 		
 		<!-- JavaScript
 		================================================== -->
@@ -391,6 +397,10 @@
 			const proof = document.querySelector('#proof');
 
 			const fund_wallet_form = document.querySelector('#fund-wallet-form');
+
+			const loader = document.querySelector('.custom-loader');
+			const showLoader = () => loader.classList.remove('hide-element');
+			const hideLoader = () => loader.classList.add('hide-element');
 
 			const headers = {
 				'Accept':'application/json',
@@ -432,13 +442,12 @@
 
 			
 			const fundWallet = async () => {
-				console.log(proof);
 
 				const data = {
 					amount: amount.value,
 					proof: evidence,
 				}
-
+				showLoader();
 				await axios.post(`${base_url}transactions`, {...data},{ headers })
 				.then(res =>{
 					 window.location.href = '/recent-transactions.html';
@@ -446,6 +455,8 @@
 					// form_result.classList.add('show-form-result');
 					// form_result.textContent = e.response.data.message;
 				});
+
+				hideLoader();
 			}
 
 			generateRandomData();
