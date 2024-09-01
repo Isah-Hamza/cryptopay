@@ -232,11 +232,10 @@
     						</div>
     						<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit</p>
     						<ul style="margin-top: 20px;">
-    							<li style="border-block: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin Wallet Address</b>
-									<p> <span class="glyphicon glyphicon-copy" ></span> <span>Click to copy</span> <p id="bitcoin"></p> </p></li>
-    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Solana</b><p id="solanar"></p> </li>
-    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Ethereum</b><p id="ethereum"></p> </li>
-    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px;"><b>USDT</b><p id="usdt"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin <img title="CLICK TO COPY ADDRESS" id="copy-bitcoin" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="bitcoin"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Solana <img title="CLICK TO COPY ADDRESS" id="copy-solanar" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="solanar"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Ethereum <img title="CLICK TO COPY ADDRESS" id="copy-ethereum" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="ethereum"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px;"><b>USDT <img title="CLICK TO COPY ADDRESS" id="copy-usdt" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="usdt"></p> </li>
     						</ul>
     					</div>
     				</div>
@@ -397,6 +396,11 @@
 			const wallet_profit = document.querySelector('#wallet-profit');
 			
 			const bitcoin = document.querySelector('#bitcoin');
+			const copy_bitcoin = document.querySelector('#copy-bitcoin');
+			const copy_solanar = document.querySelector('#copy-solanar');
+			const copy_ethereum = document.querySelector('#copy-ethereum');
+			const copy_usdt = document.querySelector('#copy-usdt');
+
 			const solanar = document.querySelector('#solanar');
 			const usdt = document.querySelector('#usdt');
 			const ethereum = document.querySelector('#ethereum');
@@ -472,6 +476,22 @@
 			getPlatformWallet();
 			getUser();
 
+			const copyAddress = (address) => {
+				// Get the text field
+				const copyText = address;
+
+				// Select the text field
+				// copyText.textContent.select();
+				// copyText.setSelectionRange(0, 99999); // For mobile devices
+
+				// Copy the text inside the text field
+				navigator.clipboard.writeText(copyText.textContent);
+
+				// Alert the copied text
+				alert("Copied the text: " + copyText.textContent);
+			}
+			
+
 			// Event Listeners
 			fund_wallet_form.addEventListener('submit', async (e) => {
 				e.preventDefault();
@@ -482,11 +502,67 @@
 				evidence = e.target.value;
 			})
 
+			copy_bitcoin.addEventListener('click', (e) => {
+				copyAddress(bitcoin)
+			})
+
+			copy_solanar.addEventListener('click', (e) => {
+				copyAddress(solanar)
+			})
+
+			copy_ethereum.addEventListener('click', (e) => {
+				copyAddress(ethereum)
+			})
+
+			copy_usdt.addEventListener('click', (e) => {
+				copyAddress(usdt)
+			})
+
 			setInterval(() => {
 				generateRandomData()
 			}, 20000);
 
 		  </script>
+
+		  <style>
+			.tooltip {
+			position: relative;
+			display: inline-block;
+			}
+
+			.tooltip .tooltiptext {
+			visibility: hidden;
+			width: 140px;
+			background-color: #555;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px;
+			position: absolute;
+			z-index: 1;
+			bottom: 150%;
+			left: 50%;
+			margin-left: -75px;
+			opacity: 0;
+			transition: opacity 0.3s;
+			}
+
+			.tooltip .tooltiptext::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: #555 transparent transparent transparent;
+			}
+
+			.tooltip:hover .tooltiptext {
+			visibility: visible;
+			opacity: 1;
+			}
+		  </style>
 		
 	</body>
 </html>
