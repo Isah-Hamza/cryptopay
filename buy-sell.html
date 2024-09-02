@@ -159,7 +159,7 @@
       						<!-- <img src="images/box-icon-a.png" alt="box-icon" class="box-icon"> -->
       						<h6 id="user-name" class="ucap">_</h6>
       						<p style="margin-bottom: 10px;" class="small">From <b id="user-country">_</b> </p>
-      						<p class="small">Just funded their wallet with</p>
+      						<p class="small">just funded their wallet with</p>
       						<h6 class="ucap"> $<span style="color: black;" id="user-amount" >0.00</span></h6>
       						<!-- <p class="small">Last Withdrawal Amount.</p> -->
       					</div>
@@ -176,13 +176,13 @@
       						<img src="images/box-icon-c.png" alt="box-icon" class="box-icon">
       						<h6 class="ucap">$<b id="wallet-profit">0</b>.00</h6>
       						<p class="small">Total Profit Earned</p>
-      					</div>
-      				</div>
-      				<a href="./recent-transactions.html" style="cursor: pointer;" class="col-md-3 col-md-offset-0 col-sm-6 col-sm-offset-2">
-      					<div class="box round shadow-alt">
+						</div>
+					</div>
+					<a href="./recent-transactions.html" style="cursor: pointer;" class="col-md-3 col-md-offset-0 col-sm-6 col-sm-offset-2">
+						<div class="box round shadow-alt">
 							<img src="images/box-icon-a.png" alt="box-icon" class="box-icon">
-      						<h6 style="text-decoration: none !important;" class="ucap">$0.00</h6>
-      						<p style="text-decoration: none !important; font-weight: 600;" class="small">View Transaction History</p>
+							<div style="color: black; display: flex; align-items: center; justify-content: center; gap: 7px; " ><h6 style="text-decoration: none !important;" class="ucap" id="total-transactions" >0</h6> <span style="margin-bottom: 14px;" >Transaction(s)</span> </div>
+							<p style="text-decoration: none !important; font-weight: 600;" class="small">View history</p>
       					</div>
       				</a>
       			</div>
@@ -232,7 +232,7 @@
     						</div>
     						<p>Many services nowadays offer their users to buy Bitcoins, Lorem ipsum dolor sit</p>
     						<ul style="margin-top: 20px;">
-    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin <img title="CLICK TO COPY ADDRESS" id="copy-bitcoin" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="bitcoin"></p> </li>
+    							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Bitcoin <button class="tooltip" style="all: unset;" ><img title="CLICK TO COPY ADDRESS" id="copy-bitcoin" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> <span class="tooltiptext" id="myTooltip">Copy to clipboard</span> </button> </b><p id="bitcoin"></p> </li>
     							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Solana <img title="CLICK TO COPY ADDRESS" id="copy-solanar" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="solanar"></p> </li>
     							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px; margin-bottom: 10px;" ><b>Ethereum <img title="CLICK TO COPY ADDRESS" id="copy-ethereum" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="ethereum"></p> </li>
     							<li style="border-bottom: 1px solid gainsboro; padding-bottom: 5px;"><b>USDT <img title="CLICK TO COPY ADDRESS" id="copy-usdt" style="margin-top: 8px; margin-left: 8px; cursor: pointer;" width="20" src="./images/copy-icon.svg" alt=""> </b><p id="usdt"></p> </li>
@@ -394,6 +394,7 @@
 			const useramount = document.querySelector('#user-amount');
 			const wallet_balance = document.querySelector('#wallet-balance');
 			const wallet_profit = document.querySelector('#wallet-profit');
+			const total_transactions = document.querySelector('#total-transactions');
 			
 			const bitcoin = document.querySelector('#bitcoin');
 			const copy_bitcoin = document.querySelector('#copy-bitcoin');
@@ -426,6 +427,7 @@
 				.then(res =>{
 					wallet_balance.textContent = res.data.data.wallet.amount.toLocaleString('en-US');
 					wallet_profit.textContent = res.data.data.wallet.profit.toLocaleString('en-US');
+					total_transactions.textContent = res.data.data.total_transactions;
 				}).catch(e => console.log(e.message));
 			}
 		  
@@ -488,7 +490,7 @@
 				navigator.clipboard.writeText(copyText.textContent);
 
 				// Alert the copied text
-				alert("Copied the text: " + copyText.textContent);
+				alert("Wallet Address Copied: " + copyText.textContent);
 			}
 			
 
