@@ -346,7 +346,7 @@
 				showLoader()
 				await axios.post(`${base_url}kyc`,{ ...payload },{ headers })
 				.then(res =>{
-					window.location.href ='/profile.html';
+					// window.location.href ='/profile.html';
 				}).catch(e => {
 					console.log(login_form_result);
 					login_form_result.classList.add('show-form-result');
