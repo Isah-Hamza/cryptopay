@@ -1464,4 +1464,26 @@ form label.error { display: none !important; }
 .hide-element{
   display: none !important;
 }
+
+.wallet-overlay{
+  background: rgba(0, 0, 0, .5);
+  display: grid;
+  place-content: center;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100dvw;
+  height: 100dvh;
+  z-index: 10;
+}
+
+.wallet-overlay .overlay-card {
+  background: white;
+  width: 500px !important;
+  min-height: 300px !important;
+  padding: 20px;
+  border-radius: 10px;
+
+}
+
 /* End */

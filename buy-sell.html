@@ -189,14 +189,70 @@
 				  <div style="margin-top: 50px;" class="container">
 					<div class="row text-center">
 						<a href="#withdraw-fund" class="btn btn-md btn-alt">Withdraw </a>
-						<a style="margin-left: 10px;" href="#fund-wallet" class="btn btn-outlinel btn-md btn-alt">Fund Wallet</a>
+						<button style="margin-left: 10px;" id="fund-wallet" class="btn btn-outlinel btn-md btn-alt">Fund Wallet</button>
 					</div>
 				</div>
 
       		</div>
       	</div><!--End Features Box -->
 
-    
+		<div style="display: none;" class="wallet-overlay">
+			<div class="overlay-card">
+				<div class="text-block">
+					<div style="display: flex; align-items: center; justify-content: space-between;" class="flex">
+						<h3>Fund Your Wallet</h3>
+						<a style="cursor: pointer; margin-top: -20px;" id="close-overlay" class="glyphicon glyphicon-remove" ></a>
+					</div>
+					<form id="fund-wallet-form" class="">
+						<div id="step1" class="">
+							<div style="margin-bottom: 20px;" class="form-field form-m-bttm">
+								<span>Amount</span>
+								<input required id="amount" name="contact-name" type="number" min="1" placeholder="Amount Funded *" class="form-control required">
+							</div>
+							<div style="margin-top: 10px;" class="form-field form-m-bttm">
+								<span>Select Wallet</span>
+								<select required id="register-gender" class="form-control" placeholder="gender">
+									<option value="">Choose Wallet</option>
+									<option value="bitcoin">Bitcoin</option>
+									<option value="ethereum">Ethereum</option>
+									<option value="solana">Solana</option>
+									<option value="usdt">USDT</option>
+								</select>
+							</div>
+							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
+								<button id="proceed-to-pay" style="margin-left: auto;" type="button" class="btn btn-md btn-alt">Proceed To Pay </button>
+							</div>
+						</div>
+						<div style=" height: 0; visibility: hidden;" id="step2" >
+							<div style="margin-top: 10px;" class="form-field form-m-bttm">
+								<span>Select Wallet</span>
+								<select required id="wallet-chooser" class="form-control" placeholder="gender">
+									<option value="">Choose Wallet</option>
+									<option value="bitcoin">Bitcoin</option>
+									<option value="ethereum">Ethereum</option>
+									<option value="solana">Solana</option>
+									<option value="usdt">USDT</option>
+								</select>
+							</div>
+							<div style="margin-top: 20px;" class="form-field form-m-bttm">
+								<span>Wallet Address</span>
+								<input
+								 value=""
+								 required id="wallet-input" name="contact-name" placeholder="Amount Funded *" class="form-control required">
+							</div>
+							<div style="margin-top: 20px;" class="form-field form-m-bttm">
+								<span>Transaction Receipt</span>
+								<input required id="proof" name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
+							</div>
+							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
+								<button id="go-back" style="padding-inline: 20px; border-radius: 5px; margin-left: auto;" type="button" class=" btn-md">Go Back</button>
+								<button style="margin-left: 20px;" type="submit" class="btn btn-md btn-alt">Submit </button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
       	
       	<!--HR Line -->
     	<div style="margin-top: 100px;" class="container hr-line"></div>
@@ -390,10 +446,15 @@
 			import { faker } from 'https://esm.sh/@faker-js/faker';
 			const base_url='http://127.0.0.1:8000/api/';
 			const username = document.querySelector('#user-name');
+			const wallet_overlay = document.querySelector('.wallet-overlay');
+			const close_overlay = document.querySelector('#close-overlay');
+
 			const usercountry = document.querySelector('#user-country');
 			const useramount = document.querySelector('#user-amount');
 			const wallet_balance = document.querySelector('#wallet-balance');
 			const wallet_profit = document.querySelector('#wallet-profit');
+			const wallet_input = document.querySelector('#wallet-input');
+			const wallet_chooser = document.querySelector('#wallet-chooser');
 			const total_transactions = document.querySelector('#total-transactions');
 			
 			const bitcoin = document.querySelector('#bitcoin');
@@ -412,10 +473,16 @@
 			const proof = document.querySelector('#proof');
 
 			const fund_wallet_form = document.querySelector('#fund-wallet-form');
-
+			const fund_wallet_button = document.querySelector('#fund-wallet');
+			
 			const loader = document.querySelector('.custom-loader');
 			const showLoader = () => loader.classList.remove('hide-element');
 			const hideLoader = () => loader.classList.add('hide-element');
+			
+			const step1 = document.querySelector('#step1');
+			const step2 = document.querySelector('#step2');
+			const proceed_to_pay = document.querySelector('#proceed-to-pay');
+			const go_back = document.querySelector('#go-back');
 
 			const headers = {
 				'Accept':'application/json',
@@ -537,9 +604,52 @@
 				copyAddress(usdt)
 			})
 
+			wallet_chooser.addEventListener('change', e => {
+				console.log(e.target.value)
+				if(e.target.value == 'bitcoin'){
+					wallet_input.value = bitcoin.textContent;
+				}else if(e.target.value == 'ethereum'){
+					wallet_input.value = ethereum.textContent;
+				
+				}else if(e.target.value == 'solana'){
+					wallet_input.value = solanar.textContent;
+				}else if(e.target.value == 'usdt'){
+					wallet_input.value = usdt.textContent;
+				} else {
+					wallet_input.value = '';
+				}
+			})
+
+			fund_wallet_button.addEventListener('click', e => {
+				wallet_overlay.style.display = 'grid';
+			})
+
+			close_overlay.addEventListener('click', e => {
+				wallet_overlay.style.display = 'none';
+			})
 			setInterval(() => {
 				generateRandomData()
 			}, 20000);
+
+			proceed_to_pay.addEventListener('click', e => {
+				if(!amount.value){
+					return
+				}
+				step1.style.height = '0px';
+				step1.style.visibility = 'hidden';
+
+				step2.style.height = 'auto';
+				step2.style.visibility = 'visible';
+			})
+
+			go_back.addEventListener('click', e => {
+				step1.style.height = 'auto';
+				step1.style.visibility = 'visible';
+				
+				step2.style.height = '0px';
+				step2.style.visibility = 'hidden';
+
+			})
 
 		  </script>
 
