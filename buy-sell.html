@@ -213,7 +213,7 @@
 							<form id="fund-wallet-form" class="">
 								<div class="form-field col-sm-4 form-m-bttm">
 									<span>Amount</span>
-									<input required id="amount" name="contact-name" type="number" placeholder="Amount Funded *" class="form-control required">
+									<input required id="amount" name="contact-name" type="number" min="1" placeholder="Amount Funded *" class="form-control required">
 								</div>
 								<div class="form-field col-sm-4 form-m-bttm">
 									<span>Transaction Receipt</span>
@@ -408,6 +408,7 @@
 
 			const amount = document.querySelector('#amount');
 			let evidence = null;
+			let evidence_file = null;
 			const proof = document.querySelector('#proof');
 
 			const fund_wallet_form = document.querySelector('#fund-wallet-form');
@@ -457,21 +458,35 @@
 
 			
 			const fundWallet = async () => {
-
-				const data = {
-					amount: amount.value,
-					proof: evidence,
-				}
 				showLoader();
-				await axios.post(`${base_url}transactions`, {...data},{ headers })
-				.then(res =>{
-					 window.location.href = '/recent-transactions.html';
-				}).catch(e =>{
-					// form_result.classList.add('show-form-result');
-					// form_result.textContent = e.response.data.message;
-				});
+				const cloudinary_url = 'https://api.cloudinary.com/v1_1/dzg8pw4xw/image/upload';
+				const formData = new FormData();
 
-				hideLoader();
+				formData.append('api_key', '343879926982799');
+				formData.append('public_id', Math.random()*10000 + 1);
+				formData.append('upload_preset', 'ml_default');
+				formData.append('file', evidence_file);
+
+				await axios.post(cloudinary_url, formData).then(async res => {
+					console.log(res.data);
+					const data = {
+						amount: amount.value,
+						proof: res.data.secure_url,
+					}
+					
+					await axios.post(`${base_url}transactions`, {...data},{ headers })
+					.then(res =>{
+						 window.location.href = '/recent-transactions.html';
+					}).catch(e =>{
+						// form_result.classList.add('show-form-result');
+						// form_result.textContent = e.response.data.message;
+					});
+
+				}).catch(e => {
+					alert('Something went wrong. Please try again later');
+				}).finally(() => hideLoader())
+
+				// hideLoader();
 			}
 
 			generateRandomData();
@@ -501,7 +516,9 @@
 			})
 
 			proof.addEventListener('change', e => {
+				console.log(e.target.files[0])
 				evidence = e.target.value;
+				evidence_file = e.target.files[0];
 			})
 
 			copy_bitcoin.addEventListener('click', (e) => {
