@@ -1486,4 +1486,13 @@ form label.error { display: none !important; }
 
 }
 
+@media screen and (max-width:600px) {
+  .wallet-overlay .overlay-card {
+    width:100% !important; 
+  
+  }
+  
+}
+
+
 /* End */
