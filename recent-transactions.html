@@ -210,8 +210,8 @@
 							<div class="wgs-content">
 								<ul class="wgs-contact-list">
 									<li><span class="pe pe-7s-map-marker"></span>1234 Sed ut perspiciatis Road, <br/>At vero eos, D58 8975, London.</li>
-									<li><span class="pe pe-7s-call"></span>Telephone : (123) 4567 8910 <br/>Telephone : (123) 1234 5678</li>
-									<li><span class="pe pe-7s-global"></span>Email : <a href="mailto:support@cryptopay-fx.com">support@cryptopay-fx.com</a> <br/>Web : <a href="http://example.com">www.example.com</a></li>
+									<li><span class="pe pe-7s-call"></span>Telegram : Cryptopay222</li>
+									<li><span class="pe pe-7s-global"></span>Email : <a href="mailto:support@cryptopay-fx.com">support@cryptopay-fx.com</a> <br/>Web : <a href="http://cryptopay-fx.com">www.cryptopay-fx.com</a></li>
 								</ul>
 							</div>
 						</div>
@@ -309,7 +309,7 @@
 						tr.appendChild(id);
 						
 						const type = document.createElement('td')
-						type.textContent = item.type ?? 'Wallet Funding';
+						type.textContent = item.transaction_type == 1 ? 'Wallet Funding' : 'Withdrawal Request';
 						tr.appendChild(type);
 						
 						const amount = document.createElement('td')
@@ -318,7 +318,7 @@
 						tr.appendChild(amount);
 						
 						const profit = document.createElement('td')
-						profit.textContent = `$${item.profit.toLocaleString('en-US')}`;
+						profit.textContent = item.transaction_type == 1 ? `$${item.profit.toLocaleString('en-US')}` : 'N/A';
 						profit.classList.add('font_500');
 						tr.appendChild(profit);
 						

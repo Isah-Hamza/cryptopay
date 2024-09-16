@@ -197,7 +197,7 @@
       	</div><!--End Features Box -->
 
 		<div style="display: none;" class="wallet-overlay">
-			<div style="display: none;" id="fund-card" class="fund overlay-card"> style="display: none;" 
+			<div style="display: none;" id="fund-card" class="fund overlay-card"> 
 				<div class="text-block">
 					<div style="display: flex; align-items: center; justify-content: space-between;" class="flex">
 						<h3>Fund Your Wallet</h3>
@@ -259,14 +259,14 @@
 						<a style="cursor: pointer; margin-top: -20px;" id="close-overlay" class="glyphicon glyphicon-remove" ></a>
 					</div>
 					<form id="withdraw-fund-form" class="">
-						<div id="step1" class="">
+						<div class="">
 							<div style="margin-bottom: 20px;" class="form-field form-m-bttm">
 								<span>Amount</span>
-								<input required id="amount" name="contact-name" type="number" min="1" placeholder="Amount To Withdraw *" class="form-control required">
+								<input required id="withdraw-amount" name="contact-name" type="number" min="1" placeholder="Amount To Withdraw *" class="form-control required">
 							</div>
 							<div style="margin-top: 10px;" class="form-field form-m-bttm">
 								<span>Select Wallet</span>
-								<select required id="register-gender" class="form-control" placeholder="gender">
+								<select required id="withdraw-wallet" class="form-control" placeholder="gender">
 									<option value="">Choose Wallet</option>
 									<option value="bitcoin">Bitcoin</option>
 									<option value="ethereum">Ethereum</option>
@@ -276,38 +276,13 @@
 							</div>
 							<div style="margin-bottom: 20px;" class="form-field form-m-bttm"></div>
 								<span>Wallet Address</span>
-								<input required id="amount" name="contact-name" placeholder="Selected Wallet Address*" class="form-control required">
+								<input required id="withdraw-wallet-address" name="contact-name" placeholder="Selected Wallet Address*" class="form-control required">
 							</div>
 							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
-								<button id="proceed-to-withdraw" style="margin-left: auto;" type="button" class="btn btn-md btn-alt">SUBMIT REQUEST </button>
+								<button id="proceed-to-withdraw" style="margin-left: auto;" type="submit" class="btn btn-md btn-alt">SUBMIT REQUEST </button>
 							</div>
 						</div>
-						<div style=" height: 0; visibility: hidden;" id="step2" >
-							<div style="margin-top: 10px;" class="form-field form-m-bttm">
-								<span>Select Wallet</span>
-								<select required id="wallet-chooser" class="form-control" placeholder="gender">
-									<option value="">Choose Wallet</option>
-									<option value="bitcoin">Bitcoin</option>
-									<option value="ethereum">Ethereum</option>
-									<option value="solana">Solana</option>
-									<option value="usdt">USDT</option>
-								</select>
-							</div>
-							<div style="margin-top: 20px;" class="form-field form-m-bttm">
-								<span>Wallet Address</span>
-								<input
-								 value=""
-								 required id="wallet-input" name="contact-name" placeholder="Amount Funded *" class="form-control required">
-							</div>
-							<div style="margin-top: 20px;" class="form-field form-m-bttm">
-								<span>Transaction Receipt</span>
-								<input required id="proof" name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
-							</div>
-							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
-								<button id="go-back" style="padding-inline: 20px; border-radius: 5px; margin-left: auto;" type="button" class=" btn-md">Go Back</button>
-								<button style="margin-left: 20px;" type="submit" class="btn btn-md btn-alt">Submit </button>
-							</div>
-						</div>
+						 
 					</form>
 				</div>
 			</div>
@@ -438,9 +413,9 @@
 							<h5 class="wgs-title ucap">get in touch</h5>
 							<div class="wgs-content">
 								<ul class="wgs-contact-list">
-									<li><span class="pe pe-7s-map-marker"></span>217 Summit Boulevard <br/>Birmingham, AL 35243</li>
-									<li><span class="pe pe-7s-call"></span>Telephone : (123) 4567 8910 <br/>Telephone : (123) 1234 5678</li>
-									<li><span class="pe pe-7s-global"></span>Email : <a href="mailto:support@cryptopay-fx.com">support@cryptopay-fx.com</a> <br/>Web : <a href="http://example.com">www.example.com</a></li>
+									<li><span class="pe pe-7s-map-marker"></span>World Wide (Remote)</li>
+									<li><span class="pe pe-7s-call"></span>Telegram : Cryptopay222</li>
+									<li><span class="pe pe-7s-global"></span>Email : <a href="mailto:support@cryptopay-fx.com">support@cryptopay-fx.com</a> <br/>Web : <a href="http://cryptopay-fx.com">www.cryptopay-fx.com</a></li>
 								</ul>
 							</div>
 						</div>
@@ -516,6 +491,7 @@
 			const ethereum = document.querySelector('#ethereum');
 
 			const amount = document.querySelector('#amount');
+			const withdraw_amount = document.querySelector('#withdraw-amount');
 			let evidence = null;
 			let evidence_file = null;
 			const proof = document.querySelector('#proof');
@@ -535,6 +511,7 @@
 			const step1 = document.querySelector('#step1');
 			const step2 = document.querySelector('#step2');
 			const proceed_to_pay = document.querySelector('#proceed-to-pay');
+			const proceed_to_withdraw = document.querySelector('#proceed-to-withdraw');
 			const go_back = document.querySelector('#go-back');
 
 			const headers = {
@@ -574,6 +551,25 @@
 				username.textContent = randomName;
 				useramount.textContent = randomAmount;
 				usercountry.textContent = randomCountry;
+			}
+
+			
+			const withdrawFund = async () => {
+				showLoader();
+				const data = {
+					amount: withdraw_amount.value,
+					type:2,
+				}
+				
+				await axios.post(`${base_url}transactions`, {...data},{ headers })
+				.then(res =>{
+						window.location.href = '/recent-transactions.html';
+				}).catch(e =>{
+					// form_result.classList.add('show-form-result');
+					// form_result.textContent = e.response.data.message;
+				}).finally(() => hideLoader());
+
+				// hideLoader();
 			}
 
 			
@@ -633,6 +629,12 @@
 			fund_wallet_form.addEventListener('submit', async (e) => {
 				e.preventDefault();
 				await fundWallet();
+			})
+
+			withdraw_fund_form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				console.log('first')
+				await withdrawFund();
 			})
 
 			proof.addEventListener('change', e => {
