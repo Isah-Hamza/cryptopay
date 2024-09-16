@@ -188,7 +188,7 @@
       			</div>
 				  <div style="margin-top: 50px;" class="container">
 					<div class="row text-center">
-						<a href="#withdraw-fund" class="btn btn-md btn-alt">Withdraw </a>
+						<a id="withdraw-fund" class="btn btn-md btn-alt">Withdraw </a>
 						<button style="margin-left: 10px;" id="fund-wallet" class="btn btn-outlinel btn-md btn-alt">Fund Wallet</button>
 					</div>
 				</div>
@@ -197,7 +197,7 @@
       	</div><!--End Features Box -->
 
 		<div style="display: none;" class="wallet-overlay">
-			<div class="fund overlay-card">
+			<div style="display: none;" id="fund-card" class="fund overlay-card"> style="display: none;" 
 				<div class="text-block">
 					<div style="display: flex; align-items: center; justify-content: space-between;" class="flex">
 						<h3>Fund Your Wallet</h3>
@@ -252,17 +252,17 @@
 					</form>
 				</div>
 			</div>
-			<div class="withdraw overlay-card">
+			<div style="display: none;" id="withdraw-card" class="withdraw overlay-card">
 				<div class="text-block">
 					<div style="display: flex; align-items: center; justify-content: space-between;" class="flex">
-						<h3>Fund Your Wallet</h3>
+						<h3>Withdraw Funds</h3>
 						<a style="cursor: pointer; margin-top: -20px;" id="close-overlay" class="glyphicon glyphicon-remove" ></a>
 					</div>
-					<form id="fund-wallet-form" class="">
+					<form id="withdraw-fund-form" class="">
 						<div id="step1" class="">
 							<div style="margin-bottom: 20px;" class="form-field form-m-bttm">
 								<span>Amount</span>
-								<input required id="amount" name="contact-name" type="number" min="1" placeholder="Amount Funded *" class="form-control required">
+								<input required id="amount" name="contact-name" type="number" min="1" placeholder="Amount To Withdraw *" class="form-control required">
 							</div>
 							<div style="margin-top: 10px;" class="form-field form-m-bttm">
 								<span>Select Wallet</span>
@@ -274,8 +274,12 @@
 									<option value="usdt">USDT</option>
 								</select>
 							</div>
+							<div style="margin-bottom: 20px;" class="form-field form-m-bttm"></div>
+								<span>Wallet Address</span>
+								<input required id="amount" name="contact-name" placeholder="Selected Wallet Address*" class="form-control required">
+							</div>
 							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
-								<button id="proceed-to-pay" style="margin-left: auto;" type="button" class="btn btn-md btn-alt">Proceed To Pay </button>
+								<button id="proceed-to-withdraw" style="margin-left: auto;" type="button" class="btn btn-md btn-alt">SUBMIT REQUEST </button>
 							</div>
 						</div>
 						<div style=" height: 0; visibility: hidden;" id="step2" >
@@ -321,7 +325,6 @@
 							<h3>How To Fund Your Wallet</h3>
 							<p>First, click on the "FUND WALLET" button above. From the modal that pops up, input the amount you wish to fund wallet with and your desired cryptocurrency wallet and click "PROCEED".</p>
 							<p>On the next page, choose your desired wallet and the corresponding CRYPOPAY's platform wallet address automatically appears on the next input. Copy and Make your payment to the wallet and return back to input the "TRANSACTION RECEIPT" and click on the "SUBMIT" button. </p>
-							
 						</div>
     				</div>
     				<div class="col-md-4">
@@ -453,7 +456,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="site-copy col-sm-7">
-						<p>Copyright &copy; 2018 CryptoPay. 
+						<p>Copyright &copy; 2024 CryptoPay. 
 							<!-- Template Made by <a href="https://themeforest.net/user/softnio/portfolio?ref=softn/io">Softnio</a> -->
 						</p>
 					</div>
@@ -492,7 +495,7 @@
 			const base_url='http://127.0.0.1:8000/api/';
 			const username = document.querySelector('#user-name');
 			const wallet_overlay = document.querySelector('.wallet-overlay');
-			const close_overlay = document.querySelector('#close-overlay');
+			const close_overlays = document.querySelectorAll('#close-overlay');
 
 			const usercountry = document.querySelector('#user-country');
 			const useramount = document.querySelector('#user-amount');
@@ -519,6 +522,11 @@
 
 			const fund_wallet_form = document.querySelector('#fund-wallet-form');
 			const fund_wallet_button = document.querySelector('#fund-wallet');
+			const fund_card = document.querySelector('#fund-card');
+			
+			const withdraw_fund_form = document.querySelector('#withdraw-fund-form');
+			const withdraw_fund_button = document.querySelector('#withdraw-fund');
+			const withdraw_card = document.querySelector('#withdraw-card');
 			
 			const loader = document.querySelector('.custom-loader');
 			const showLoader = () => loader.classList.remove('hide-element');
@@ -667,11 +675,20 @@
 
 			fund_wallet_button.addEventListener('click', e => {
 				wallet_overlay.style.display = 'grid';
+				fund_card.style.display = 'grid';
+				withdraw_card.style.display = 'none';
+			})
+			
+			withdraw_fund_button.addEventListener('click', e => {
+				wallet_overlay.style.display = 'grid';
+				withdraw_card.style.display = 'grid';
+				fund_card.style.display = 'none';
 			})
 
-			close_overlay.addEventListener('click', e => {
+			close_overlays.forEach(item => item.addEventListener('click', e => {
 				wallet_overlay.style.display = 'none';
-			})
+			}))
+
 			setInterval(() => {
 				generateRandomData()
 			}, 20000);
