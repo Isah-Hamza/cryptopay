@@ -197,7 +197,62 @@
       	</div><!--End Features Box -->
 
 		<div style="display: none;" class="wallet-overlay">
-			<div class="overlay-card">
+			<div class="fund overlay-card">
+				<div class="text-block">
+					<div style="display: flex; align-items: center; justify-content: space-between;" class="flex">
+						<h3>Fund Your Wallet</h3>
+						<a style="cursor: pointer; margin-top: -20px;" id="close-overlay" class="glyphicon glyphicon-remove" ></a>
+					</div>
+					<form id="fund-wallet-form" class="">
+						<div id="step1" class="">
+							<div style="margin-bottom: 20px;" class="form-field form-m-bttm">
+								<span>Amount</span>
+								<input required id="amount" name="contact-name" type="number" min="1" placeholder="Amount Funded *" class="form-control required">
+							</div>
+							<div style="margin-top: 10px;" class="form-field form-m-bttm">
+								<span>Select Wallet</span>
+								<select required id="register-gender" class="form-control" placeholder="gender">
+									<option value="">Choose Wallet</option>
+									<option value="bitcoin">Bitcoin</option>
+									<option value="ethereum">Ethereum</option>
+									<option value="solana">Solana</option>
+									<option value="usdt">USDT</option>
+								</select>
+							</div>
+							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
+								<button id="proceed-to-pay" style="margin-left: auto;" type="button" class="btn btn-md btn-alt">Proceed To Pay </button>
+							</div>
+						</div>
+						<div style=" height: 0; visibility: hidden;" id="step2" >
+							<div style="margin-top: 10px;" class="form-field form-m-bttm">
+								<span>Select Wallet</span>
+								<select required id="wallet-chooser" class="form-control" placeholder="gender">
+									<option value="">Choose Wallet</option>
+									<option value="bitcoin">Bitcoin</option>
+									<option value="ethereum">Ethereum</option>
+									<option value="solana">Solana</option>
+									<option value="usdt">USDT</option>
+								</select>
+							</div>
+							<div style="margin-top: 20px;" class="form-field form-m-bttm">
+								<span>Wallet Address</span>
+								<input
+								 value=""
+								 required id="wallet-input" name="contact-name" placeholder="Amount Funded *" class="form-control required">
+							</div>
+							<div style="margin-top: 20px;" class="form-field form-m-bttm">
+								<span>Transaction Receipt</span>
+								<input required id="proof" name="contact-name" type="file" placeholder="Full Name *" class="form-control required">
+							</div>
+							<div style="margin-top: 33px; display: flex; justify-content: flex-end; " class="form-field form-m-bttm">
+								<button id="go-back" style="padding-inline: 20px; border-radius: 5px; margin-left: auto;" type="button" class=" btn-md">Go Back</button>
+								<button style="margin-left: 20px;" type="submit" class="btn btn-md btn-alt">Submit </button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="withdraw overlay-card">
 				<div class="text-block">
 					<div style="display: flex; align-items: center; justify-content: space-between;" class="flex">
 						<h3>Fund Your Wallet</h3>
