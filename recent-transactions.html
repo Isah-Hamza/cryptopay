@@ -309,7 +309,7 @@
 						tr.appendChild(id);
 						
 						const type = document.createElement('td')
-						type.textContent = item.transaction_type == 1 ? 'Wallet Funding' : 'Withdrawal Request';
+						type.textContent = item.transaction_type != 2 ? 'Wallet Funding' : 'Withdrawal Request';
 						tr.appendChild(type);
 						
 						const amount = document.createElement('td')
@@ -318,7 +318,7 @@
 						tr.appendChild(amount);
 						
 						const profit = document.createElement('td')
-						profit.textContent = item.transaction_type == 1 ? `$${item.profit.toLocaleString('en-US')}` : 'N/A';
+						profit.textContent = item.transaction_type != 2 ? `$${item.profit.toLocaleString('en-US')}` : 'N/A';
 						profit.classList.add('font_500');
 						tr.appendChild(profit);
 						
