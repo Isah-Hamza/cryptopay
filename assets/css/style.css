@@ -5063,7 +5063,11 @@ div[class*="wide-"]
   position: relative;
 }
 .testimonial-item .client-photo img {
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  width: 200px;
+  height: 175px;
+  object-fit: cover;
+  object-position: top;
 }
 .testimonial-item .client-photo .fa {
   position: absolute;
