@@ -118,7 +118,8 @@
 									<th>S/NO</th>
 									<th>Transaction Type</th>
 									<th>Amount</th>
-									<th>Profit Made</th>
+									<th>Profit</th>
+									<th>Total</th>
 									<th>Date</th>
 									<th>Time</th>
 									<th>Status</th>
@@ -321,6 +322,12 @@
 						profit.textContent = item.transaction_type != 2 ? `$${item.profit.toLocaleString('en-US')}` : 'N/A';
 						profit.classList.add('font_500');
 						tr.appendChild(profit);
+						
+						
+						const total = document.createElement('td')
+						total.textContent = `$${(item.profit + item.amount).toLocaleString('en-US')}`;
+						total.classList.add('font_500');
+						tr.appendChild(total);
 						
 						const date = document.createElement('td')
 						const date_result = formatDate(item.created_at,'date');
