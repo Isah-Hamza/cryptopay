@@ -13,6 +13,8 @@
 		<!-- Custom styles for this template -->
 		<link href="assets/css/style.css" rel="stylesheet">
 		<link href="assets/css/theme.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">	
 	</head>
 	<body>
 		<script type="text/javascript">
@@ -160,7 +162,7 @@
 										</div>
 										<div class="form-group">
 											<div class="form-field form-m-bttm">
-												<input required id="login-phone" name="login-phone" type="text" placeholder="Phone Number *" class="form-control required email" aria-required="true">
+												<input required  id="login-phone" name="login-phone" type="text" placeholder="Phone Number *" class="telephone form-control required email" aria-required="true">
 											</div>
 										</div>
 										<div class="form-group">
@@ -172,18 +174,18 @@
 											<select required id="login-means-of-identification" class="form-control" placeholder="gender">
 												<option value="Means of Identification">Means of Identification</option>
 												<option value="National Identification Number">National Identification Number</option>
-												<option value="Bank Verification Number">Bank Verification Number</option>
+												<option value="Birth Certificate">Birth Certificate</option>
 												<option value="State Security Number">State Security Number</option>
 												<option value="Driver's Licence">Driver's Licence</option>
-												<option value="Voter's Card">Voter's Card</option>
+												<option value="Voter's Card">Voter's ID Card</option>
 											</select>
 										</div>
 										<div class="form-group">
 											<div class="form-field">
-												<input required id="login-identification-number" name="identification-number" type="text" placeholder="Identification Number *" class="form-control required" aria-required="true">
+												<input id="login-identification-number" name="identification-number" type="text" placeholder="Identification Number *" class="form-control required" aria-required="true">
 											</div>
 											<div class="form-field">
-												<input required id="login-identification-file" name="identification-number" type="file" placeholder="Identification Number *" style="display: none;" class="form-control required" aria-required="true">
+												<input id="login-identification-file" name="identification-file" type="file" placeholder="Identification File *" style="display: none;" class="form-control required" aria-required="true">
 											</div>
 										</div>
 										<button id="submit-login" type="submit" class="btn btn-alt">Submit Information</button>
@@ -321,7 +323,7 @@
 		<!-- JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/24.5.0/build/js/intlTelInput.min.js" integrity="sha512-rk7qff5izQrFXD6ofd0/HaKg6FFGV7OnvWCNZNldZ3ZSLy7O9wDcCo64O97VYCtbC9IhA+K3GUjQBSXup3yTxQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
 		<script src="assets/js/jquery.bundle.js"></script>
 		<script src="assets/js/script.js"></script>
@@ -340,19 +342,23 @@
 			const showLoader = () => loader.classList.remove('hide-element');
 			const hideLoader = () => loader.classList.add('hide-element');
 
+			let document_file;
+
 			const headers = {
 				'Accept':'application/json',
 				'Content-Type':'application/json',
 				'Authorization': `Bearer ${window.localStorage.getItem('crypto_token')}`,
 			}
 
+			
 			const login = async (payload) => {
 				console.log(payload)
+				
 				login_form_result.classList.remove('show-form-result');
 				showLoader()
 				await axios.post(`${base_url}kyc`,{ ...payload },{ headers })
 				.then(res =>{
-					// window.location.href ='/profile.html';
+					window.location.href ='/profile.html';
 				}).catch(e => {
 					console.log(login_form_result);
 					login_form_result.classList.add('show-form-result');
@@ -361,10 +367,39 @@
 				hideLoader()
 			}
 
+			const uploadToCloudinary = async (file) => {
+				showLoader();
+				const cloudinary_url = 'https://api.cloudinary.com/v1_1/dzg8pw4xw/image/upload';
+				const formData = new FormData();
+
+				formData.append('api_key', '343879926982799');
+				formData.append('public_id', Math.random()*10000 + 1);
+				formData.append('upload_preset', 'ml_default');
+				formData.append('file', file);
+
+				await axios.post(cloudinary_url, formData).then(async res => {
+					console.log(res.data);
+
+					const payload = {
+						email: login_email.value,
+						password: login_password.value,
+						phone: login_phone.value,
+						means_of_identification: login_means_of_identification.value,
+						identification_file:res.data.secure_url,
+					}
+					
+					await login(payload);
+
+				}).catch(e => {
+					alert('Something went wrong. Please try again later');
+				}).finally(() => hideLoader())
+			}
+
+
 			login_means_of_identification.addEventListener('change', e => {
 				switch(e.target.value){
-					case "National Indenification Number" :
-					case "Bank Verification Number" :
+					case "National Identification Number" :
+					case "Birth Certificate" :
 					case "State Security Number" :
 						login_identification_number.style.display = 'block';
 						login_identification_file.style.display = 'none';
@@ -379,18 +414,66 @@
 			})
 
 			login_form.addEventListener('submit', async (e) => {
+				// console.log(document.getElementsByTagName('input'));
 				e.preventDefault();
+				const full_phone = document.querySelector('input[name="phone_full"]');
+				console.log(full_phone);
+
 				const payload = {
 					email: login_email.value,
 					password: login_password.value,
 					phone: login_phone.value,
+					// phone: full_phone.value,
 					means_of_identification: login_means_of_identification.value,
-					identification_number:login_identification_number.value
+					identification_number:login_identification_number.value,
+					identification_file:document_file,
 				}
 
-				await login(payload);
+				if(!payload.identification_file && !payload.identification_number){
+					login_form_result.classList.add('show-form-result');
+					login_form_result.textContent = "Please provide a valid means of identification to continue";
+					return;
+				}
+
+				switch(payload.means_of_identification){
+					case "National Identification Number" :
+					case "Birth Certificate" :
+					case "State Security Number" :
+						await login(payload);
+						break;
+					case "Driver's Licence" :
+					case "Voter's Card" :
+						uploadToCloudinary(document_file);
+						break;
+					default:
+				}
+
+
+			})
+			
+			
+			login_identification_file.addEventListener('change', e => {
+				document_file = e.target.files[0];
 			})
 
+			
+
+		</script>
+
+		<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+		<script>
+			const input = document.querySelector(".telephone");
+			window.intlTelInput(input, {
+				utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js",
+				formatOnDisplay:false,
+				formatAsYouType:false,
+				hiddenInput: function(telInputName) {
+					return {
+					phone: "phone_full",
+					country: "country_code"
+					};
+				}
+			});
 		</script>
 		
 	</body>

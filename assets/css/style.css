@@ -5631,6 +5631,10 @@ form label.error {
   border-radius: 10px;
 }
 
+.iti{
+  width: 100%;
+}
+
 @media screen and (max-width: 600px) {
   .wallet-overlay .overlay-card {
     width: 100% !important;
