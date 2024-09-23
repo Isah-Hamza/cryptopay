@@ -276,7 +276,7 @@
 							<div class="wgs-content">
 								<ul class="wgs-contact-list">
 									<li><span class="pe pe-7s-map-marker"></span>World Wide (Remote)</li>
-									<li><span class="pe pe-7s-call"></span>Telegram : Cryptopay222</li>
+									
 									<li><span class="pe pe-7s-global"></span>Email : <a href="mailto:support@cryptopay-fx.com">support@cryptopay-fx.com</a> <br/>Web : <a href="http://cryptopay-fx.com">www.cryptopay-fx.com</a></li>
 								</ul>
 							</div>
@@ -399,12 +399,12 @@
 			login_means_of_identification.addEventListener('change', e => {
 				switch(e.target.value){
 					case "National Identification Number" :
-					case "Birth Certificate" :
 					case "State Security Number" :
 						login_identification_number.style.display = 'block';
 						login_identification_file.style.display = 'none';
-					break;
+						break;
 					case "Driver's Licence" :
+					case "Birth Certificate" :
 					case "Voter's Card" :
 						login_identification_number.style.display = 'none';
 						login_identification_file.style.display = 'block';
