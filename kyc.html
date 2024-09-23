@@ -358,7 +358,7 @@
 				showLoader()
 				await axios.post(`${base_url}kyc`,{ ...payload },{ headers })
 				.then(res =>{
-					window.location.href ='/profile.html';
+					// window.location.href ='/profile.html';
 				}).catch(e => {
 					console.log(login_form_result);
 					login_form_result.classList.add('show-form-result');
@@ -437,10 +437,10 @@
 
 				switch(payload.means_of_identification){
 					case "National Identification Number" :
-					case "Birth Certificate" :
 					case "State Security Number" :
 						await login(payload);
 						break;
+					case "Birth Certificate" :
 					case "Driver's Licence" :
 					case "Voter's Card" :
 						uploadToCloudinary(document_file);
