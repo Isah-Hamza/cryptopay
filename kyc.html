@@ -173,7 +173,7 @@
 												<option value="Means of Identification">Means of Identification</option>
 												<option value="National Identification Number">National Identification Number</option>
 												<option value="Bank Verification Number">Bank Verification Number</option>
-												<option value="tate Security Number">State Security Number</option>
+												<option value="State Security Number">State Security Number</option>
 												<option value="Driver's Licence">Driver's Licence</option>
 												<option value="Voter's Card">Voter's Card</option>
 											</select>
@@ -181,6 +181,9 @@
 										<div class="form-group">
 											<div class="form-field">
 												<input required id="login-identification-number" name="identification-number" type="text" placeholder="Identification Number *" class="form-control required" aria-required="true">
+											</div>
+											<div class="form-field">
+												<input required id="login-identification-file" name="identification-number" type="file" placeholder="Identification Number *" style="display: none;" class="form-control required" aria-required="true">
 											</div>
 										</div>
 										<button id="submit-login" type="submit" class="btn btn-alt">Submit Information</button>
@@ -331,6 +334,7 @@
 			const login_password = document.querySelector('#login-password');
 			const login_means_of_identification = document.querySelector('#login-means-of-identification');
 			const login_identification_number = document.querySelector('#login-identification-number');
+			const login_identification_file = document.querySelector('#login-identification-file');
 
 			const loader = document.querySelector('.custom-loader');
 			const showLoader = () => loader.classList.remove('hide-element');
@@ -356,6 +360,23 @@
 				});
 				hideLoader()
 			}
+
+			login_means_of_identification.addEventListener('change', e => {
+				switch(e.target.value){
+					case "National Indenification Number" :
+					case "Bank Verification Number" :
+					case "State Security Number" :
+						login_identification_number.style.display = 'block';
+						login_identification_file.style.display = 'none';
+					break;
+					case "Driver's Licence" :
+					case "Voter's Card" :
+						login_identification_number.style.display = 'none';
+						login_identification_file.style.display = 'block';
+						break;
+					default:
+				}
+			})
 
 			login_form.addEventListener('submit', async (e) => {
 				e.preventDefault();
